@@ -21,7 +21,7 @@ namespace RESTQueue.lib.Handlers
         {
             var content = new StringContent(JsonConvert.SerializeObject(hashCommand), Encoding.UTF8, "application/json");
 
-            await HttpClient.PostAsync("http://localhost:56996/api/Query", content);
+            await HttpClient.PostAsync("http://localhost:5000/api/Query", content);
         }
     }
 }

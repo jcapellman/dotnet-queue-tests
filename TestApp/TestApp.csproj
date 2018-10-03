@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\dotnet-queue-tests\RESTQueue.lib\RESTQueue.lib.csproj" />
+    <ProjectReference Include="..\RESTQueue.lib\RESTQueue.lib.csproj" />
   </ItemGroup>
 
 </Project>
