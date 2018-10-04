@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+
+using Microsoft.AspNetCore.Mvc;
 
 using RawRabbit;
 
@@ -16,11 +18,24 @@ namespace RESTQueueAPI.Controllers
         {
             _bus = bus;
         }
+
+        [HttpGet]
+        public ResultResponse Get(Guid guid)
+        {
+            return new ResultResponse(); 
+        }
         
         [HttpPost]
-        public void Post(QueryHashCommand queryHash)
+        public QueryHashResponse Post(QueryHashCommand queryHash)
         {
-            _bus.PublishAsync(queryHash);
+            var response = new QueryHashResponse
+            {
+                Guid = Guid.NewGuid()
+            };
+
+            _bus.PublishAsync(queryHash, response.Guid);
+
+            return response;
         }
     }
 }
