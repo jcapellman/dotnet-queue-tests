@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
+using MongoDB.Driver;
+
 using RawRabbit;
 
 using RESTQueue.lib.Enums;
@@ -24,9 +26,31 @@ namespace RESTQueueAPI.Controllers
         }
 
         [HttpGet]
-        public QueryHashResponse Get(Guid guid)
+        public async Task<QueryHashResponse> Get(Guid guid)
         {
-            return new QueryHashResponse();
+            var settings = new MongoClientSettings()
+            {
+                Server = new MongoServerAddress("localhost", 27017)
+            };
+
+            var server = new MongoDB.Driver.MongoClient(settings);
+
+            var db = server.GetDatabase("results");
+
+            var collection = db.GetCollection<QueryHashResponse>("results");
+
+            var result = await collection.FindAsync(a => a.Guid == guid);
+
+            if (result == null)
+            {
+                return new QueryHashResponse
+                {
+                    Guid = guid,
+                    Status = ResponseStatus.PENDING
+                };
+            }
+
+            return result.Current.FirstOrDefault();
         }
         
         [HttpPost]
