@@ -1,5 +1,5 @@
-﻿using System.Net.Http;
-using System.Text;
+﻿using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
@@ -12,16 +12,31 @@ namespace RESTQueue.lib.Handlers
     {
         private static HttpClient HttpClient;
 
-        public PostHandler()
+        private string _baseURL;
+
+        public PostHandler(string url)
         {
+            _baseURL = url;
+
             HttpClient = new HttpClient();
         }
 
-        public async Task SubmitQueryHashAsync(QueryHashCommand hashCommand)
+        public async Task<QueryHashResponse> SubmitQueryHashAsync(string filePath)
         {
-            var content = new StringContent(JsonConvert.SerializeObject(hashCommand), Encoding.UTF8, "application/json");
+            using (var fileStream = File.OpenRead(filePath))
+            {
+                using (var content = new MultipartFormDataContent())
+                {
+                    content.Add(new StreamContent(fileStream), "upload", fileStream.Name);
 
-            await HttpClient.PostAsync("http://localhost:5000/api/Query", content);
+                    using (var message = await HttpClient.PostAsync($"{_baseURL}Query", content))
+                    {
+                        var input = await message.Content.ReadAsStringAsync();
+
+                        return JsonConvert.DeserializeObject<QueryHashResponse>(input);
+                    }
+                }
+            }
         }
     }
 }
