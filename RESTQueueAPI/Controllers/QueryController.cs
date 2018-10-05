@@ -38,28 +38,38 @@ namespace RESTQueueAPI.Controllers
             {
                 return new QueryHashResponse
                 {
-                    Status = ResponseStatus.ERROR
+                    Status = ResponseStatus.ERROR,
+                    ErrorMessage = "Failed to upload file"
                 };
             }
 
             var response = new QueryHashResponse
             {
-                Guid = Guid.NewGuid()
+                Guid = Guid.NewGuid(),
+                Status = ResponseStatus.SUBMITTED
             };
 
-            var filePath = Path.GetTempFileName();
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            try
             {
-                await file.CopyToAsync(stream);
+                var filePath = Path.GetTempFileName();
 
-                var bytes = new byte[file.Length];
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
 
-                stream.Read(bytes);
-                
-                await _bus.PublishAsync(bytes, response.Guid);
+                    var bytes = new byte[file.Length];
+
+                    stream.Read(bytes);
+
+                    await _bus.PublishAsync(bytes, response.Guid);
+                }
             }
-            
+            catch (Exception ex)
+            {
+                response.ErrorMessage = $"Failed to upload to queue {ex}";
+                response.Status = ResponseStatus.ERROR;
+            }
+
             return response;
         }
     }
