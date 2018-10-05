@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RESTQueueAPI", "RESTQueueAPI\RESTQueueAPI.csproj", "{41493348-0846-4BB7-8C62-A5E79ADFB967}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RESTQueueAPI", "RESTQueueAPI\RESTQueueAPI.csproj", "{41493348-0846-4BB7-8C62-A5E79ADFB967}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RESTQueue.lib", "RESTQueue.lib\RESTQueue.lib.csproj", "{D6E75403-3804-46CF-B382-96F280D0D9BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RESTQueue.lib", "RESTQueue.lib\RESTQueue.lib.csproj", "{D6E75403-3804-46CF-B382-96F280D0D9BC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "TestApp\TestApp.csproj", "{F07022F8-A7F8-4870-8F47-859FCD3F3D40}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RESTQueue.ProcessorApp", "RESTQueue.ProcessorApp\RESTQueue.ProcessorApp.csproj", "{E5B9BD4A-9155-4D14-BC8F-5DB4F85A44E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{F07022F8-A7F8-4870-8F47-859FCD3F3D40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F07022F8-A7F8-4870-8F47-859FCD3F3D40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F07022F8-A7F8-4870-8F47-859FCD3F3D40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5B9BD4A-9155-4D14-BC8F-5DB4F85A44E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5B9BD4A-9155-4D14-BC8F-5DB4F85A44E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5B9BD4A-9155-4D14-BC8F-5DB4F85A44E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5B9BD4A-9155-4D14-BC8F-5DB4F85A44E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
