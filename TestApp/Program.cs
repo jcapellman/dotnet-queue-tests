@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 
 using RESTQueue.lib.Handlers;
-using RESTQueue.lib.Models;
 
 namespace TestApp
 {
@@ -10,16 +9,16 @@ namespace TestApp
     {
         static async Task Main(string[] args)
         {
-            var pHandler = new PostHandler();
+            var pHandler = new PostHandler("http://localhost:5000/api/");
 
             for (var x = 0; x < 100; x++)
             {
-                await pHandler.SubmitQueryHashAsync(new QueryHashCommand
-                {
-                    Hash = x.ToString().PadRight(40).ToString(),
-                    Timestamp = DateTime.Now
-                });
+               var result = await pHandler.SubmitQueryHashAsync(args[0]);
+
+                Console.WriteLine(result.Guid);
             }
+
+            Console.ReadKey();
         }
     }
 }
