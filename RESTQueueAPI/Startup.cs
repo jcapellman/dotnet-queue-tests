@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using RawRabbit.vNext;
+
+using RESTQueue.lib.Managers;
 
 namespace RESTQueueAPI
 {
@@ -20,6 +24,9 @@ namespace RESTQueueAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddSingleton(new MongoDBManager(Configuration["MongoDBHost"],
+                Convert.ToInt32(Configuration["MongoDBPort"])));
 
             services.AddRawRabbit(config =>
             {
