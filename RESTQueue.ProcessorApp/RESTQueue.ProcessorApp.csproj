@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="0.6.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
     <PackageReference Include="RabbitMQ.Client" Version="5.1.0" />
     <PackageReference Include="RawRabbit" Version="1.10.4" />
@@ -13,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RESTQueue.lib.datascience\RESTQueue.lib.datascience.csproj" />
     <ProjectReference Include="..\RESTQueue.lib\RESTQueue.lib.csproj" />
   </ItemGroup>
 

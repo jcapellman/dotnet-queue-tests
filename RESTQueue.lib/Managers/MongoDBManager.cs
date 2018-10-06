@@ -9,8 +9,7 @@ namespace RESTQueue.lib.Managers
 {
     public class MongoDBManager
     {
-        private MongoClient _client;
-        private IMongoDatabase _db;
+        private readonly IMongoDatabase _db;
 
         public MongoDBManager(string host, int port)
         {
@@ -19,9 +18,9 @@ namespace RESTQueue.lib.Managers
                 Server = new MongoServerAddress(host, port)
             };
 
-            _client = new MongoClient(settings);
+            var client = new MongoClient(settings);
 
-            _db = _client.GetDatabase("results");
+            _db = client.GetDatabase("results");
         }
 
         public async Task<IAsyncCursor<QueryHashResponse>> GetFromGUIDAsync(Guid guid)
