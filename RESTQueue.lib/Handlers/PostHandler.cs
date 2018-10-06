@@ -27,7 +27,7 @@ namespace RESTQueue.lib.Handlers
             {
                 using (var content = new MultipartFormDataContent())
                 {
-                    content.Add(new StreamContent(fileStream), "upload", fileStream.Name);
+                    content.Add(new StreamContent(fileStream), "file", fileStream.Name);
 
                     using (var message = await HttpClient.PostAsync($"{_baseURL}Query", content))
                     {
