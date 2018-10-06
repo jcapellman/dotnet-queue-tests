@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using RawRabbit;
@@ -44,16 +45,14 @@ namespace RESTQueueAPI.Controllers
         }
         
         [HttpPost]
-        public async Task<QueryHashResponse> Post()
+        public async Task<QueryHashResponse> Post(IFormFile file)
         {
-            var file = Request.Form.Files.FirstOrDefault();
-
             if (file == null)
             {
                 return new QueryHashResponse
                 {
                     Status = ResponseStatus.ERROR,
-                    ErrorMessage = "Failed to upload file"
+                    ErrorMessage = "File uploaded was null"
                 };
             }
 
@@ -65,17 +64,11 @@ namespace RESTQueueAPI.Controllers
 
             try
             {
-                var filePath = Path.GetTempFileName();
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                using (var memoryStream = new MemoryStream())
                 {
-                    await file.CopyToAsync(stream);
+                    await file.CopyToAsync(memoryStream);
 
-                    var bytes = new byte[file.Length];
-
-                    stream.Read(bytes);
-
-                    await _bus.PublishAsync(bytes, response.Guid);
+                    await _bus.PublishAsync(memoryStream.ToArray(), response.Guid);
                 }
             }
             catch (Exception ex)
