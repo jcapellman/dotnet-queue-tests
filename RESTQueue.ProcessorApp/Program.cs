@@ -28,7 +28,7 @@ namespace RESTQueue.ProcessorApp
 
         private static async Task SubscribeMethod(byte[] data, MessageContext context)
         {
-            var isMalicious = await _dsManager.IsMaliciousAsync(data);
+            var isMalicious = _dsManager.IsMalicious(data);
             
             var queryHashResponse = new QueryHashResponse
             {
