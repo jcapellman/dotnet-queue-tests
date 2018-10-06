@@ -2,20 +2,23 @@
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
-using MongoDB.Driver;
-
 using RawRabbit.Context;
 using RawRabbit.vNext;
 
 using RESTQueue.lib.Enums;
+using RESTQueue.lib.Managers;
 using RESTQueue.lib.Models;
 
 namespace RESTQueue.ProcessorApp
 {
     class Program
     {
+        private static MongoDBManager _dbManager;
+
         static void Main(string[] args)
         {
+            _dbManager = new MongoDBManager("localhost", 27017);
+
             var client = BusClientFactory.CreateDefault();
             
              client.SubscribeAsync<byte[]>(SubscribeMethod);
@@ -26,18 +29,7 @@ namespace RESTQueue.ProcessorApp
             Console.WriteLine(context.GlobalRequestId);
 
             // TODO: Run Model
-
-            var settings = new MongoClientSettings()
-            {
-                Server = new MongoServerAddress("localhost", 27017)
-            };
-
-            var server = new MongoDB.Driver.MongoClient(settings);
-
-            var db = server.GetDatabase("results");
-
-            var collection = db.GetCollection<QueryHashResponse>("results");
-
+            
             var queryHashResponse = new QueryHashResponse
             {
                 Guid = context.GlobalRequestId,
@@ -46,7 +38,7 @@ namespace RESTQueue.ProcessorApp
                 MD5Hash = MD5.Create().ComputeHash(data).ToString()
             };
 
-            await collection.InsertOneAsync(queryHashResponse);
+            await _dbManager.Insert(queryHashResponse);
         }
     }
 }
