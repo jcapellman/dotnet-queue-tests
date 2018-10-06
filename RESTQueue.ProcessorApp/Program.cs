@@ -1,23 +1,25 @@
-﻿using System;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 using RawRabbit.Context;
 using RawRabbit.vNext;
 
+using RESTQueue.lib.datascience;
 using RESTQueue.lib.Enums;
 using RESTQueue.lib.Managers;
 using RESTQueue.lib.Models;
 
 namespace RESTQueue.ProcessorApp
 {
-    class Program
+    public class Program
     {
         private static MongoDBManager _dbManager;
+        private static DSManager _dsManager;
 
         static void Main(string[] args)
         {
             _dbManager = new MongoDBManager("localhost", 27017);
+            _dsManager = new DSManager();
 
             var client = BusClientFactory.CreateDefault();
             
@@ -26,15 +28,13 @@ namespace RESTQueue.ProcessorApp
 
         private static async Task SubscribeMethod(byte[] data, MessageContext context)
         {
-            Console.WriteLine(context.GlobalRequestId);
-
-            // TODO: Run Model
+            var isMalicious = await _dsManager.IsMaliciousAsync(data);
             
             var queryHashResponse = new QueryHashResponse
             {
                 Guid = context.GlobalRequestId,
                 Status = ResponseStatus.SCANNED,
-                IsMalicious = true,
+                IsMalicious = isMalicious,
                 MD5Hash = MD5.Create().ComputeHash(data).ToString()
             };
 
