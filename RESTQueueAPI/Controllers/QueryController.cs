@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
-using MongoDB.Driver;
-
 using RawRabbit;
 
 using RESTQueue.lib.Enums;
+using RESTQueue.lib.Managers;
 using RESTQueue.lib.Models;
 
 namespace RESTQueueAPI.Controllers
@@ -19,28 +18,19 @@ namespace RESTQueueAPI.Controllers
     public class QueryController : ControllerBase
     {
         private readonly IBusClient _bus;
+        private readonly MongoDBManager _dbManager;
 
-        public QueryController(IBusClient bus)
+        public QueryController(IBusClient bus, MongoDBManager dbManager)
         {
             _bus = bus;
+            _dbManager = dbManager;
         }
 
         [HttpGet]
         public async Task<QueryHashResponse> Get(Guid guid)
         {
-            var settings = new MongoClientSettings()
-            {
-                Server = new MongoServerAddress("localhost", 27017)
-            };
-
-            var server = new MongoDB.Driver.MongoClient(settings);
-
-            var db = server.GetDatabase("results");
-
-            var collection = db.GetCollection<QueryHashResponse>("results");
-
-            var result = await collection.FindAsync(a => a.Guid == guid);
-
+            var result = await _dbManager.GetFromGUIDAsync(guid);
+            
             if (result == null)
             {
                 return new QueryHashResponse
