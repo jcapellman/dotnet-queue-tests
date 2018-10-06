@@ -30,5 +30,12 @@ namespace RESTQueue.lib.Managers
 
             return await collection.FindAsync(a => a.Guid == guid);
         }
+
+        public async Task Insert(QueryHashResponse item)
+        {
+            var collection = _db.GetCollection<QueryHashResponse>("results");
+            
+            await collection.InsertOneAsync(item);
+        }
     }
 }
