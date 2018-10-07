@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Options;
+
 using MongoDB.Driver;
 
+using RESTQueue.lib.Common;
 using RESTQueue.lib.Models;
 
 namespace RESTQueue.lib.Managers
@@ -11,14 +14,16 @@ namespace RESTQueue.lib.Managers
     {
         private readonly IMongoDatabase _db;
 
-        public MongoDBManager(string host, int port)
+        public MongoDBManager(IOptions<Settings> settings) : this(settings.Value) { }
+
+        public MongoDBManager(Settings settings)
         {
-            var settings = new MongoClientSettings()
+            var mongoSettings = new MongoClientSettings()
             {
-                Server = new MongoServerAddress(host, port)
+                Server = new MongoServerAddress(settings.MongoHostName, settings.MongoPortNumber)
             };
 
-            var client = new MongoClient(settings);
+            var client = new MongoClient(mongoSettings);
 
             _db = client.GetDatabase("results");
         }

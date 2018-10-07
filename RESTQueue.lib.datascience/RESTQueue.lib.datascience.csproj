@@ -10,4 +10,8 @@
     <PackageReference Include="Microsoft.ML.HalLearners" Version="0.6.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RESTQueue.lib\RESTQueue.lib.csproj" />
+  </ItemGroup>
+
 </Project>
