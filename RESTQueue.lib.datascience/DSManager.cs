@@ -4,7 +4,7 @@ using Microsoft.ML;
 using Microsoft.ML.Core.Data;
 using Microsoft.ML.Runtime.Data;
 
-using RESTQueue.lib.datascience.Common;
+using RESTQueue.lib.Common;
 using RESTQueue.lib.datascience.Models;
 
 namespace RESTQueue.lib.datascience
@@ -15,7 +15,7 @@ namespace RESTQueue.lib.datascience
 
         private PredictionFunction<PEModelData, PEPrediction> _predictionFunction;
 
-        public DSManager(string modelName = Constants.MODEL_NAME)
+        public DSManager(string modelName = Constants.FILENAME_MODEL)
         {
             _modelName = modelName;
         }
