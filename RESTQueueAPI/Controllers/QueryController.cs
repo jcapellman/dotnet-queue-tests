@@ -29,20 +29,32 @@ namespace RESTQueueAPI.Controllers
         [HttpGet]
         public async Task<QueryHashResponse> Get(Guid guid)
         {
-            var result = await _database.GetFromGUIDAsync(guid);
-            
-            if (result == null)
+            try
+            {
+                var result = await _database.GetFromGUIDAsync(guid);
+
+                if (result == null)
+                {
+                    return new QueryHashResponse
+                    {
+                        Guid = guid,
+                        Status = ResponseStatus.PENDING
+                    };
+                }
+
+                return result;
+            }
+            catch (Exception ex)
             {
                 return new QueryHashResponse
                 {
                     Guid = guid,
-                    Status = ResponseStatus.PENDING
+                    Status = ResponseStatus.ERROR,
+                    ErrorMessage = ex.ToString()
                 };
             }
-
-            return result;
         }
-        
+
         [HttpPost]
         public async Task<QueryHashResponse> Post(IFormFile file)
         {
