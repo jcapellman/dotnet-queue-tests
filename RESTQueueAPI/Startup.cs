@@ -7,8 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using RawRabbit.vNext;
-
 using RESTQueue.lib.Managers;
+using RESTQueueAPI.Common;
 
 namespace RESTQueueAPI
 {
@@ -25,8 +25,15 @@ namespace RESTQueueAPI
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddSingleton(new MongoDBManager(Configuration["MongoDBHost"],
-                Convert.ToInt32(Configuration["MongoDBPort"])));
+            services.Configure<Settings>(options =>
+            {
+                options.MongoHostName
+                    = Configuration.GetSection("MongoConnection:HostName").Value;
+                options.MongoPortNumber
+                    = Convert.ToInt32(Configuration.GetSection("MongoConnection:PortNumber").Value);
+            });
+
+            services.AddTransient(typeof(MongoDBManager));
 
             services.AddRawRabbit(config =>
             {
