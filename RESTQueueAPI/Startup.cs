@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RawRabbit.vNext;
 
 using RESTQueue.lib.Common;
-using RESTQueue.lib.Managers;
+using RESTQueue.lib.DAL;
 
 namespace RESTQueueAPI
 {
@@ -34,7 +34,7 @@ namespace RESTQueueAPI
                     = Convert.ToInt32(Configuration.GetSection("MongoConnection:PortNumber").Value);
             });
 
-            services.AddTransient(typeof(MongoDBManager));
+            services.AddSingleton(typeof(MongoDatabase));
 
             services.AddRawRabbit(config =>
             {
