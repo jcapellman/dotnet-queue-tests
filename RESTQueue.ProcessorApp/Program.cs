@@ -1,28 +1,30 @@
 ﻿using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+
 using Newtonsoft.Json;
+
 using RawRabbit.Context;
 using RawRabbit.vNext;
 
 using RESTQueue.lib.Common;
 using RESTQueue.lib.datascience;
+using RESTQueue.lib.DAL;
 using RESTQueue.lib.Enums;
-using RESTQueue.lib.Managers;
 using RESTQueue.lib.Models;
 
 namespace RESTQueue.ProcessorApp
 {
     public class Program
     {
-        private static MongoDBManager _dbManager;
+        private static MongoDatabase _mongoDatabase;
         private static DSManager _dsManager;
 
         static void Main(string[] args)
         {
-            var settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(Constants.FILENAME_SETTINGS));       
+            var settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(Constants.FILENAME_SETTINGS));
 
-            _dbManager = new MongoDBManager(settings);
+            _mongoDatabase = new MongoDatabase(settings);
             _dsManager = new DSManager();
 
             var client = BusClientFactory.CreateDefault();
@@ -42,7 +44,7 @@ namespace RESTQueue.ProcessorApp
                 MD5Hash = MD5.Create().ComputeHash(data).ToString()
             };
 
-            await _dbManager.Insert(queryHashResponse);
+            await _mongoDatabase.Insert(queryHashResponse);
         }
     }
 }
