@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
@@ -8,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 using RawRabbit;
 
+using RESTQueue.lib.DAL;
 using RESTQueue.lib.Enums;
-using RESTQueue.lib.Managers;
 using RESTQueue.lib.Models;
 
 namespace RESTQueueAPI.Controllers
@@ -19,9 +18,9 @@ namespace RESTQueueAPI.Controllers
     public class QueryController : ControllerBase
     {
         private readonly IBusClient _bus;
-        private readonly MongoDBManager _database;
+        private readonly IStorageDatabase _database;
 
-        public QueryController(IBusClient bus, MongoDBManager database)
+        public QueryController(IBusClient bus, IStorageDatabase database)
         {
             _bus = bus;
             _database = database;
@@ -41,7 +40,7 @@ namespace RESTQueueAPI.Controllers
                 };
             }
 
-            return result.Current.FirstOrDefault();
+            return result;
         }
         
         [HttpPost]
