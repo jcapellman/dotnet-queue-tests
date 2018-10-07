@@ -19,18 +19,18 @@ namespace RESTQueueAPI.Controllers
     public class QueryController : ControllerBase
     {
         private readonly IBusClient _bus;
-        private readonly MongoDBManager _dbManager;
+        private readonly MongoDBManager _database;
 
-        public QueryController(IBusClient bus, MongoDBManager dbManager)
+        public QueryController(IBusClient bus, MongoDBManager database)
         {
             _bus = bus;
-            _dbManager = dbManager;
+            _database = database;
         }
 
         [HttpGet]
         public async Task<QueryHashResponse> Get(Guid guid)
         {
-            var result = await _dbManager.GetFromGUIDAsync(guid);
+            var result = await _database.GetFromGUIDAsync(guid);
             
             if (result == null)
             {
