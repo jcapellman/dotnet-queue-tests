@@ -7,8 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using RawRabbit.vNext;
+
+using RESTQueue.lib.Common;
 using RESTQueue.lib.Managers;
-using RESTQueueAPI.Common;
 
 namespace RESTQueueAPI
 {
