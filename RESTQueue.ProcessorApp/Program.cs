@@ -1,9 +1,11 @@
-﻿using System.Security.Cryptography;
+﻿using System.IO;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
-
+using Newtonsoft.Json;
 using RawRabbit.Context;
 using RawRabbit.vNext;
 
+using RESTQueue.lib.Common;
 using RESTQueue.lib.datascience;
 using RESTQueue.lib.Enums;
 using RESTQueue.lib.Managers;
@@ -18,7 +20,9 @@ namespace RESTQueue.ProcessorApp
 
         static void Main(string[] args)
         {
-            _dbManager = new MongoDBManager("localhost", 27017);
+            var settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(Constants.FILENAME_SETTINGS));       
+
+            _dbManager = new MongoDBManager(settings);
             _dsManager = new DSManager();
 
             var client = BusClientFactory.CreateDefault();
