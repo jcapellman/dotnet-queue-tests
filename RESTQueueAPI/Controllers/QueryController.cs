@@ -13,19 +13,10 @@ using RESTQueue.lib.Models;
 
 namespace RESTQueueAPI.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class QueryController : ControllerBase
+    public class QueryController : BaseController
     {
-        private readonly IBusClient _bus;
-        private readonly IStorageDatabase _database;
-
-        public QueryController(IBusClient bus, IStorageDatabase database)
-        {
-            _bus = bus;
-            _database = database;
-        }
-
+        public QueryController(IBusClient bus, IStorageDatabase database) : base(bus, database) { }
+    
         [HttpGet]
         public async Task<QueryHashResponse> Get(Guid guid)
         {
@@ -46,49 +37,40 @@ namespace RESTQueueAPI.Controllers
             }
             catch (Exception ex)
             {
-                return new QueryHashResponse
-                {
-                    Guid = guid,
-                    Status = ResponseStatus.ERROR,
-                    ErrorMessage = ex.ToString()
-                };
+                return ReturnErroResponse(ex, guid);
             }
         }
 
         [HttpPost]
         public async Task<QueryHashResponse> Post(IFormFile file)
         {
-            if (file == null)
-            {
-                return new QueryHashResponse
-                {
-                    Status = ResponseStatus.ERROR,
-                    ErrorMessage = "File uploaded was null"
-                };
-            }
-
             var response = new QueryHashResponse
             {
-                Guid = Guid.NewGuid(),
-                Status = ResponseStatus.SUBMITTED
+                Guid = Guid.NewGuid()
             };
 
             try
             {
+                if (file == null)
+                {
+                    throw new ArgumentNullException(nameof(file));
+                }
+
                 using (var memoryStream = new MemoryStream())
                 {
                     await file.CopyToAsync(memoryStream);
 
                     await _bus.PublishAsync(memoryStream.ToArray(), response.Guid);
                 }
+
+                response.Status = ResponseStatus.SUBMITTED;
+
+                return response;
             }
             catch (Exception ex)
             {
-                response.ErrorMessage = $"Failed to upload to queue {ex}";
-                response.Status = ResponseStatus.ERROR;
+                return ReturnErroResponse(ex, response.Guid, "Failed to add to queue");
             }
-
-            return response;
         }
     }
 }
