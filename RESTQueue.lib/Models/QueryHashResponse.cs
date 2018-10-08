@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
-
+using RESTQueue.lib.Common;
 using RESTQueue.lib.Enums;
 
 namespace RESTQueue.lib.Models
@@ -22,5 +22,8 @@ namespace RESTQueue.lib.Models
 
         [DataMember]
         public bool IsMalicious { get; set; }
+
+        public override string ToString() => 
+            $"{Guid}::{Status}::{MD5Hash ?? Constants.RESPONSE_HASH_NOT_SET}::IsMalicious={IsMalicious}::{ErrorMessage ?? Constants.RESPONSE_NO_ERROR}";
     }
 }
