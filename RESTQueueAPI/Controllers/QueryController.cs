@@ -22,22 +22,21 @@ namespace RESTQueueAPI.Controllers
         {
             try
             {
-                var result = await _database.GetFromGUIDAsync(guid);
-
-                if (result == null)
+                var result = await Database.GetFromGUIDAsync(guid);
+                
+                var response = result ?? new QueryHashResponse
                 {
-                    return new QueryHashResponse
-                    {
-                        Guid = guid,
-                        Status = ResponseStatus.PENDING
-                    };
-                }
+                    Guid = guid,
+                    Status = ResponseStatus.PENDING
+                };
 
-                return result;
+                Logger.Debug(response.ToString());
+
+                return response;
             }
             catch (Exception ex)
             {
-                return ReturnErroResponse(ex, guid);
+                return ReturnErrorResponse(ex, guid);
             }
         }
 
@@ -60,16 +59,18 @@ namespace RESTQueueAPI.Controllers
                 {
                     await file.CopyToAsync(memoryStream);
 
-                    await _bus.PublishAsync(memoryStream.ToArray(), response.Guid);
+                    await Bus.PublishAsync(memoryStream.ToArray(), response.Guid);
                 }
 
                 response.Status = ResponseStatus.SUBMITTED;
+
+                Logger.Debug(response.ToString());
 
                 return response;
             }
             catch (Exception ex)
             {
-                return ReturnErroResponse(ex, response.Guid, "Failed to add to queue");
+                return ReturnErrorResponse(ex, response.Guid, "Failed to add to queue");
             }
         }
     }
