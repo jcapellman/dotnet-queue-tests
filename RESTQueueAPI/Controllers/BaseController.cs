@@ -17,17 +17,29 @@ namespace RESTQueueAPI.Controllers
         protected readonly IBusClient _bus;
         protected readonly IStorageDatabase _database;
 
+        protected NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public BaseController(IBusClient bus, IStorageDatabase database)
         {
             _bus = bus;
             _database = database;
         }
 
-        protected QueryHashResponse ReturnErroResponse(Exception exception, Guid guid, string additionalError = null) => new QueryHashResponse
+        protected QueryHashResponse ReturnErroResponse(Exception exception, Guid guid, string additionalError = null)
         {
-            Guid = guid,
-            Status = ResponseStatus.ERROR,
-            ErrorMessage = string.IsNullOrEmpty(additionalError) ? exception.ToString() : $"Exception: {exception} | Additional Information: {additionalError}"
-        };
+            var response = new QueryHashResponse
+            {
+
+                Guid = guid,
+                Status = ResponseStatus.ERROR,
+                ErrorMessage = string.IsNullOrEmpty(additionalError)
+                    ? exception.ToString()
+                    : $"Exception: {exception} | Additional Information: {additionalError}"
+            };
+
+            Logger.Error($"{response.Guid}::{response.Status} - {response.ErrorMessage}");
+
+            return response;
+        }
     }
 }
