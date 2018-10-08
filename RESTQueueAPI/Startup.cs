@@ -29,12 +29,12 @@ namespace RESTQueueAPI
             services.Configure<Settings>(options =>
             {
                 options.MongoHostName
-                    = Configuration.GetSection("MongoConnection:HostName").Value;
+                    = Configuration.GetSection("MongoConnection:HostName").Value ?? Constants.DEFAULT_MONGO_HOSTNAME;
                 options.MongoPortNumber
-                    = Convert.ToInt32(Configuration.GetSection("MongoConnection:PortNumber").Value);
+                    = Convert.ToInt32(Configuration.GetSection("MongoConnection:PortNumber").Value ?? Constants.DEFAULT_MONGO_HOSTPORT);
             });
 
-            services.AddSingleton(typeof(MongoDatabase));
+            services.AddTransient<IStorageDatabase, MongoDatabase>();
 
             services.AddRawRabbit(config =>
             {
