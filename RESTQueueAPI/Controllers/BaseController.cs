@@ -37,7 +37,7 @@ namespace RESTQueueAPI.Controllers
                     : $"Exception: {exception} | Additional Information: {additionalError}"
             };
 
-            Logger.Error($"{response.Guid}::{response.Status} - {response.ErrorMessage}");
+            Logger.Error(response.ToString());
 
             return response;
         }
