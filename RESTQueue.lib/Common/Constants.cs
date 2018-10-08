@@ -8,5 +8,8 @@
 
         public const string DEFAULT_MONGO_HOSTNAME = "localhost";
         public const string DEFAULT_MONGO_HOSTPORT = "27017";
+
+        public const string RESPONSE_HASH_NOT_SET = "(Hash not set)";
+        public const string RESPONSE_NO_ERROR = "(No error)";
     }
 }
