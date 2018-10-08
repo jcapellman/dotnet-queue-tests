@@ -14,15 +14,15 @@ namespace RESTQueueAPI.Controllers
     [ApiController]
     public class BaseController : ControllerBase
     {
-        protected readonly IBusClient _bus;
-        protected readonly IStorageDatabase _database;
+        protected readonly IBusClient Bus;
+        protected readonly IStorageDatabase Database;
 
         protected NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public BaseController(IBusClient bus, IStorageDatabase database)
         {
-            _bus = bus;
-            _database = database;
+            Bus = bus;
+            Database = database;
         }
 
         protected QueryHashResponse ReturnErroResponse(Exception exception, Guid guid, string additionalError = null)
