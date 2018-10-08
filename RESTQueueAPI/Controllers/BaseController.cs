@@ -25,7 +25,7 @@ namespace RESTQueueAPI.Controllers
             Database = database;
         }
 
-        protected QueryHashResponse ReturnErroResponse(Exception exception, Guid guid, string additionalError = null)
+        protected QueryHashResponse ReturnErrorResponse(Exception exception, Guid guid, string additionalError = null)
         {
             var response = new QueryHashResponse
             {
