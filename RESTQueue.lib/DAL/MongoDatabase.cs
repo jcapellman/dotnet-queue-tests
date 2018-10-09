@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Clusters;
 
 using RESTQueue.lib.Common;
 using RESTQueue.lib.Models;
@@ -43,6 +42,6 @@ namespace RESTQueue.lib.DAL
             await collection.InsertOneAsync(item);
         }
 
-        public bool IsOnline() => _db.Client.Cluster.Description.State == ClusterState.Connected;
+        public bool IsOnline() => _db.Client.StartSession().ServerSession.Id != null;
     }
 }
