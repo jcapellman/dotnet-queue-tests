@@ -2,11 +2,10 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-using RawRabbit;
-
 using RESTQueue.lib.DAL;
 using RESTQueue.lib.Enums;
 using RESTQueue.lib.Models;
+using RESTQueue.lib.Queue;
 
 namespace RESTQueueAPI.Controllers
 {
@@ -14,14 +13,14 @@ namespace RESTQueueAPI.Controllers
     [ApiController]
     public class BaseController : ControllerBase
     {
-        protected readonly IBusClient Bus;
+        protected readonly IQueue Queue;
         protected readonly IStorageDatabase Database;
 
         protected NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public BaseController(IBusClient bus, IStorageDatabase database)
+        public BaseController(IQueue queue, IStorageDatabase database)
         {
-            Bus = bus;
+            Queue = queue;
             Database = database;
         }
 
@@ -29,7 +28,6 @@ namespace RESTQueueAPI.Controllers
         {
             var response = new QueryHashResponse
             {
-
                 Guid = guid,
                 Status = ResponseStatus.ERROR,
                 ErrorMessage = string.IsNullOrEmpty(additionalError)
