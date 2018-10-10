@@ -5,17 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using RawRabbit;
-
 using RESTQueue.lib.DAL;
 using RESTQueue.lib.Enums;
 using RESTQueue.lib.Models;
+using RESTQueue.lib.Queue;
 
 namespace RESTQueueAPI.Controllers
 {
     public class QueryController : BaseController
     {
-        public QueryController(IBusClient bus, IStorageDatabase database) : base(bus, database) { }
+        public QueryController(IQueue queue, IStorageDatabase database) : base(queue, database) { }
     
         [HttpGet]
         public async Task<QueryHashResponse> Get(Guid guid)
@@ -59,9 +58,9 @@ namespace RESTQueueAPI.Controllers
                 {
                     await file.CopyToAsync(memoryStream);
 
-                    await Bus.PublishAsync(memoryStream.ToArray(), response.Guid);
+                    await Queue.AddToQueueAsync(memoryStream.ToArray(), response.Guid);
                 }
-
+            
                 response.Status = ResponseStatus.SUBMITTED;
 
                 Logger.Debug(response.ToString());
