@@ -1,12 +1,12 @@
 ﻿@page
 
-@using RawRabbit
 @using RESTQueue.lib.DAL
+@using RESTQueue.lib.Queue
 
 @model IndexModel
 
 @inject IStorageDatabase Database;
-@inject IBusClient QueueBusClient;
+@inject IQueue Queue;
 
 <h2>Server Status</h2>
 
@@ -14,12 +14,4 @@
 <p>Is Online: @Database.IsOnline()</p>
 
 <h3>Queue Status</h3>
-
-@if (QueueBusClient == null)
-{
-    <p>Is Online: False</p>
-}
-else
-{
-    <p>Is Online: True</p>
-}
+<p>Is Online: @Queue.IsOnline()</p>
