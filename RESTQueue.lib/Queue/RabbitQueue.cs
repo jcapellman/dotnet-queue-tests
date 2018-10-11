@@ -47,5 +47,7 @@ namespace RESTQueue.lib.Queue
                 return false;
             }
         }
+
+        public string Name => "RabbitMQ";
     }
 }
