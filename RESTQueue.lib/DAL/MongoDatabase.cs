@@ -15,7 +15,7 @@ namespace RESTQueue.lib.DAL
         private readonly IMongoDatabase _db;
 
         public MongoDatabase(IOptions<Settings> settings) : this(settings.Value) { }
-
+        
         public MongoDatabase(Settings settings)
         {
             var mongoSettings = new MongoClientSettings()
@@ -43,5 +43,7 @@ namespace RESTQueue.lib.DAL
         }
 
         public bool IsOnline() => _db.Client.StartSession().ServerSession.Id != null;
+
+        public string Name => "MongoDB";
     }
 }
