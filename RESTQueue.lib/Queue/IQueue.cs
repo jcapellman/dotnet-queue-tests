@@ -8,5 +8,7 @@ namespace RESTQueue.lib.Queue
         bool IsOnline();
 
         Task<bool> AddToQueueAsync(byte[] data, Guid guid);
+
+        string Name { get; }
     }
 }
