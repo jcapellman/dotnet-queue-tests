@@ -12,5 +12,7 @@ namespace RESTQueue.lib.DAL
         Task Insert(QueryHashResponse item);
 
         bool IsOnline();
+
+        string Name { get; }
     }
 }
