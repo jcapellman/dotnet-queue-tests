@@ -1,6 +1,4 @@
-﻿using System;
-
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,13 +24,7 @@ namespace RESTQueueAPI
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.Configure<Settings>(options =>
-            {
-                options.MongoHostName
-                    = Configuration.GetSection("MongoConnection:HostName").Value ?? Constants.DEFAULT_MONGO_HOSTNAME;
-                options.MongoPortNumber
-                    = Convert.ToInt32(Configuration.GetSection("MongoConnection:PortNumber").Value ?? Constants.DEFAULT_MONGO_HOSTPORT);
-            });
+            services.Configure<Settings>(Configuration.GetSection("Settings"));
 
             services.AddTransient<IStorageDatabase, MongoDatabase>();
 

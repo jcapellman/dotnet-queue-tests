@@ -20,7 +20,7 @@ namespace RESTQueue.lib.DAL
         {
             var mongoSettings = new MongoClientSettings()
             {
-                Server = new MongoServerAddress(settings.MongoHostName, settings.MongoPortNumber)
+                Server = new MongoServerAddress(settings.DatabaseHostName, settings.DatabasePortNumber)
             };
 
             var client = new MongoClient(mongoSettings);

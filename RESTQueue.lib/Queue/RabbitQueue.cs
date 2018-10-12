@@ -22,10 +22,10 @@ namespace RESTQueue.lib.Queue
         {
             var config = new RawRabbitConfiguration()
             {
-                Port = settings.RabbitMQPortNumber,
-                Username = settings.RabbitMQUsername,
-                Password = settings.RabbitMQPassword,
-                Hostnames = new List<string> {settings.RabbitMQHostName}
+                Port = settings.QueuePortNumber,
+                Username = settings.QueueUsername,
+                Password = settings.QueuePassword,
+                Hostnames = new List<string> {settings.QueueHostName}
             };
 
             _busClient = BusClientFactory.CreateDefault(config);

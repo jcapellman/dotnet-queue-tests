@@ -2,16 +2,16 @@
 {
     public class Settings
     {
-        public string MongoHostName;
+        public string DatabaseHostName;
 
-        public int MongoPortNumber;
+        public int DatabasePortNumber;
 
-        public string RabbitMQHostName;
+        public string QueueHostName;
 
-        public int RabbitMQPortNumber;
+        public int QueuePortNumber;
 
-        public string RabbitMQUsername;
+        public string QueueUsername;
 
-        public string RabbitMQPassword;
+        public string QueuePassword;
     }
 }
