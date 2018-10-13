@@ -12,7 +12,7 @@ namespace RESTQueue.lib.Handlers
     {
         private static HttpClient HttpClient;
 
-        private string _baseURL;
+        private readonly string _baseURL;
 
         public PostHandler(string url)
         {
