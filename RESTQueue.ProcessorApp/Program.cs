@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -26,6 +28,8 @@ namespace RESTQueue.ProcessorApp
         private static DSManager _dsManager;
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
+        private static List<MessageProcessor> _processors;
+
         static void Main(string[] args)
         {
             try
@@ -47,6 +51,13 @@ namespace RESTQueue.ProcessorApp
                     throw new Exception("Rabbit MQ could not be established");
                 }
 
+                _processors = new List<MessageProcessor>();
+
+                for (var x = 0; x < Environment.ProcessorCount; x++)
+                {
+                    _processors.Add(new MessageProcessor(_dsManager));
+                }
+
                 var client = BusClientFactory.CreateDefault();
 
                 client.SubscribeAsync<byte[]>(SubscribeMethod);
@@ -59,8 +70,17 @@ namespace RESTQueue.ProcessorApp
 
         private static async Task SubscribeMethod(byte[] data, MessageContext context)
         {
-            var isMalicious = _dsManager.IsMalicious(data);
-            
+            var processor = _processors.FirstOrDefault(a => !a.Running);
+
+            if (processor == null)
+            {
+                // Keep message queued in RabbitMQ
+
+                return;
+            }
+
+            var isMalicious = processor.IsMalicious(data);
+
             var queryHashResponse = new QueryHashResponse
             {
                 Guid = context.GlobalRequestId,
