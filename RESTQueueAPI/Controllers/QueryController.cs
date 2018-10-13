@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 using RESTQueue.lib.DAL;
 using RESTQueue.lib.Enums;
@@ -14,7 +15,7 @@ namespace RESTQueueAPI.Controllers
 {
     public class QueryController : BaseController
     {
-        public QueryController(IQueue queue, IStorageDatabase database) : base(queue, database) { }
+        public QueryController(IQueue queue, IStorageDatabase database, ILoggerFactory logger) : base(queue, database, logger) { }
     
         [HttpGet]
         public async Task<QueryHashResponse> Get(Guid guid)
@@ -29,7 +30,7 @@ namespace RESTQueueAPI.Controllers
                     Status = ResponseStatus.PENDING
                 };
 
-                Logger.Debug(response.ToString());
+                Logger.LogDebug(response.ToString());
 
                 return response;
             }
@@ -63,7 +64,7 @@ namespace RESTQueueAPI.Controllers
             
                 response.Status = ResponseStatus.SUBMITTED;
 
-                Logger.Debug(response.ToString());
+                Logger.LogDebug(response.ToString());
 
                 return response;
             }
