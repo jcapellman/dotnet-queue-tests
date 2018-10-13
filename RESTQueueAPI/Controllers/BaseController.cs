@@ -1,6 +1,7 @@
 ﻿using System;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 using RESTQueue.lib.DAL;
 using RESTQueue.lib.Enums;
@@ -15,13 +16,13 @@ namespace RESTQueueAPI.Controllers
     {
         protected readonly IQueue Queue;
         protected readonly IStorageDatabase Database;
-
-        protected NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-
-        public BaseController(IQueue queue, IStorageDatabase database)
+        protected readonly ILogger Logger;
+        
+        public BaseController(IQueue queue, IStorageDatabase database, ILoggerFactory loggerFactory)
         {
             Queue = queue;
             Database = database;
+            Logger = loggerFactory.CreateLogger(GetType().Namespace);
         }
 
         protected QueryHashResponse ReturnErrorResponse(Exception exception, Guid guid, string additionalError = null)
@@ -35,7 +36,7 @@ namespace RESTQueueAPI.Controllers
                     : $"Exception: {exception} | Additional Information: {additionalError}"
             };
 
-            Logger.Error(response.ToString());
+            Logger.LogError(response.ToString());
 
             return response;
         }
