@@ -30,7 +30,6 @@ namespace RESTQueue.lib.Queue
 
             _busClient = BusClientFactory.CreateDefault(config);
         }
-
         
         public bool IsOnline() => _busClient != null;
 
