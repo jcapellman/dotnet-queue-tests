@@ -11,7 +11,6 @@ using NLog;
 
 using RawRabbit.Context;
 using RawRabbit.vNext;
-using RawRabbit.vNext.Disposable;
 
 using RESTQueue.lib.Common;
 using RESTQueue.lib.datascience;
@@ -28,8 +27,7 @@ namespace RESTQueue.ProcessorApp
         private static RabbitQueue _queue;
         private static DSManager _dsManager;
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        private static IBusClient _client = BusClientFactory.CreateDefault();
-
+        
         private static List<MessageProcessor> _processors;
 
         static void Main(string[] args)
@@ -59,8 +57,10 @@ namespace RESTQueue.ProcessorApp
                 {
                     _processors.Add(new MessageProcessor(_dsManager));
                 }
-                
-                _client.SubscribeAsync<byte[]>(SubscribeMethod);
+
+                var busClient = BusClientFactory.CreateDefault<AdvancedMessageContext>();
+
+                busClient.SubscribeAsync<byte[]>(SubscribeMethod);
             }
             catch (Exception ex)
             {
@@ -68,13 +68,14 @@ namespace RESTQueue.ProcessorApp
             }
         }
 
-        private static async Task SubscribeMethod(byte[] data, MessageContext context)
+        private static async Task SubscribeMethod(byte[] data, AdvancedMessageContext context)
         {
             var processor = _processors.FirstOrDefault(a => !a.Running);
 
             if (processor == null)
             {
                 // Keep message queued in RabbitMQ
+                context.RetryLater(TimeSpan.FromSeconds(Constants.QUEUE_RETRY_SECONDS));
 
                 return;
             }
