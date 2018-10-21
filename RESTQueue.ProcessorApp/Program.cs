@@ -16,6 +16,7 @@ using RESTQueue.lib.Common;
 using RESTQueue.lib.datascience;
 using RESTQueue.lib.DAL;
 using RESTQueue.lib.Enums;
+using RESTQueue.lib.Managers;
 using RESTQueue.lib.Models;
 using RESTQueue.lib.Queue;
 
@@ -23,8 +24,7 @@ namespace RESTQueue.ProcessorApp
 {
     public class Program
     {
-        private static IStorageDatabase _primaryStorage;
-        private static IStorageDatabase _secondaryStorage;
+        private static StorageManager _storageManager= new StorageManager();
         private static RabbitQueue _queue;
         private static DSManager _dsManager;
         private static Logger Log = LogManager.GetCurrentClassLogger();
@@ -37,16 +37,16 @@ namespace RESTQueue.ProcessorApp
             {
                 var settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(Constants.FILENAME_SETTINGS));
 
-                _primaryStorage = new MongoDatabase(settings);
-                _secondaryStorage = new LiteDBDatabase();
-
-                _dsManager = new DSManager();
-
-                if (!_primaryStorage.IsOnline() && !_secondaryStorage.IsOnline())
+                var storageInitialization =
+                    _storageManager.InitializeStorage(new MongoDatabase(settings), new LiteDBDatabase());
+                
+                if (!storageInitialization)
                 {
                     throw new Exception(
-                        $"Both storage devices failed to initialize: {_primaryStorage.Name} and {_secondaryStorage.Name}");
+                        $"Both storage devices failed to initialize");
                 }
+
+                _dsManager = new DSManager();
 
                 _queue = new RabbitQueue(settings);
 
@@ -94,31 +94,14 @@ namespace RESTQueue.ProcessorApp
                 MD5Hash = MD5.Create().ComputeHash(data).ToString()
             };
 
-            var result = await _primaryStorage.Insert(queryHashResponse);
+            var insertResult = await _storageManager.InsertAsync(queryHashResponse);
 
-            if (result)
+            if (!insertResult)
             {
-                Log.Debug($"{_primaryStorage.Name} wrote {queryHashResponse} successfully");
-
-                return;
-            }
-            else
-            {
-                Log.Warn($"{_primaryStorage.Name} failed to write to disk");
-            }
-
-            var secondaryResult = await _secondaryStorage.Insert(queryHashResponse);
-
-            if (!secondaryResult)
-            {
-                Log.Error($"Secondary Storage failed, re-adding to queue");
+                Log.Error("Failed to write to storage, adding back into the queue");
 
                 context.RetryLater(TimeSpan.FromSeconds(Constants.QUEUE_RETRY_SECONDS));
-
-                return;
-            }
-
-            Log.Debug($"{_secondaryStorage.Name} wrote {queryHashResponse} successfully");
+            }   
         }
     }
 }
