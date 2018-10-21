@@ -35,11 +35,22 @@ namespace RESTQueue.lib.DAL
             return (await collection.FindAsync(a => a.Guid == guid)).FirstOrDefault();
         }
 
-        public async Task Insert(QueryHashResponse item)
+        public async Task<bool> Insert(QueryHashResponse item)
         {
-            var collection = _db.GetCollection<QueryHashResponse>("results");
+            try
+            {
+                var collection = _db.GetCollection<QueryHashResponse>("results");
 
-            await collection.InsertOneAsync(item);
+                await collection.InsertOneAsync(item);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // TODO: Log
+
+                return false;
+            }
         }
 
         public bool IsOnline() => _db.Client.StartSession().ServerSession.Id != null;
