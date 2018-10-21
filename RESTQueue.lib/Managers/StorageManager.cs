@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using NLog;
@@ -24,6 +25,25 @@ namespace RESTQueue.lib.Managers
             }
 
             return true;
+        }
+
+        public async Task<QueryHashResponse> GetFromGUIDAsync(Guid guid)
+        {
+            foreach (var database in _storageDatabases)
+            {
+                var result = await database.GetFromGUIDAsync(guid);
+
+                if (result != null)
+                {
+                    Log.Debug($"{database.Name} obtained {guid} successfully {result}");
+
+                    return result;
+                }
+            }
+
+            Log.Warn($"Could not retreieve {guid} in any storage device");
+
+            return null;
         }
 
         public async Task<bool> InsertAsync(QueryHashResponse response)
