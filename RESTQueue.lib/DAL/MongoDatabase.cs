@@ -5,6 +5,8 @@ using Microsoft.Extensions.Options;
 
 using MongoDB.Driver;
 
+using NLog;
+
 using RESTQueue.lib.Common;
 using RESTQueue.lib.Models;
 
@@ -12,6 +14,8 @@ namespace RESTQueue.lib.DAL
 {
     public class MongoDatabase : IStorageDatabase
     {
+        private static Logger Log = LogManager.GetCurrentClassLogger();
+
         private readonly IMongoDatabase _db;
 
         public MongoDatabase(IOptions<Settings> settings) : this(settings.Value) { }
@@ -47,7 +51,7 @@ namespace RESTQueue.lib.DAL
             }
             catch (Exception ex)
             {
-                // TODO: Log
+                Log.Error(ex, $"Error in {Name} when attempting to write {item}");
 
                 return false;
             }
