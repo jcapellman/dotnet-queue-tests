@@ -9,7 +9,7 @@ namespace RESTQueue.lib.DAL
     {
         Task<QueryHashResponse> GetFromGUIDAsync(Guid guid);
 
-        Task Insert(QueryHashResponse item);
+        Task<bool> Insert(QueryHashResponse item);
 
         bool IsOnline();
 
