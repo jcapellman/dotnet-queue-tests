@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using RESTQueue.lib.DAL;
 using RESTQueue.lib.Enums;
+using RESTQueue.lib.Managers;
 using RESTQueue.lib.Models;
 using RESTQueue.lib.Queue;
 
@@ -15,14 +15,14 @@ namespace RESTQueueAPI.Controllers
 {
     public class QueryController : BaseController
     {
-        public QueryController(IQueue queue, IStorageDatabase database, ILoggerFactory logger) : base(queue, database, logger) { }
+        public QueryController(IQueue queue, StorageManager storageManager, ILoggerFactory logger) : base(queue, storageManager, logger) { }
     
         [HttpGet]
         public async Task<QueryHashResponse> Get(Guid guid)
         {
             try
             {
-                var result = await Database.GetFromGUIDAsync(guid);
+                var result = await StorageManager.GetFromGUIDAsync(guid);
                 
                 var response = result ?? new QueryHashResponse
                 {
