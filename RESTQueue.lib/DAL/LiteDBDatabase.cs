@@ -14,7 +14,7 @@ namespace RESTQueue.lib.DAL
             throw new NotImplementedException();
         }
 
-        public async Task Insert(QueryHashResponse item)
+        public async Task<bool> Insert(QueryHashResponse item)
         {
             await Task.Run(() =>
             {
@@ -22,9 +22,11 @@ namespace RESTQueue.lib.DAL
                 {
                     var collection = db.GetCollection<QueryHashResponse>();
 
-                    collection.Insert(item);
+                    return collection.Insert(item) > 0;
                 }
             });
+
+            return true;
         }
 
         public bool IsOnline()
