@@ -3,8 +3,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using RESTQueue.lib.DAL;
 using RESTQueue.lib.Enums;
+using RESTQueue.lib.Managers;
 using RESTQueue.lib.Models;
 using RESTQueue.lib.Queue;
 
@@ -15,13 +15,13 @@ namespace RESTQueueAPI.Controllers
     public class BaseController : ControllerBase
     {
         protected readonly IQueue Queue;
-        protected readonly IStorageDatabase Database;
+        protected readonly StorageManager StorageManager;
         protected readonly ILogger Logger;
         
-        public BaseController(IQueue queue, IStorageDatabase database, ILoggerFactory loggerFactory)
+        public BaseController(IQueue queue, StorageManager storageManager, ILoggerFactory loggerFactory)
         {
             Queue = queue;
-            Database = database;
+            StorageManager = storageManager;
             Logger = loggerFactory.CreateLogger(GetType().Namespace);
         }
 
