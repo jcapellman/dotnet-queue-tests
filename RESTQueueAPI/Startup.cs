@@ -11,6 +11,7 @@ using NLog.Extensions.Logging;
 
 using RESTQueue.lib.Common;
 using RESTQueue.lib.DAL;
+using RESTQueue.lib.Managers;
 using RESTQueue.lib.Queue;
 
 namespace RESTQueueAPI
@@ -32,7 +33,11 @@ namespace RESTQueueAPI
 
             services.Configure<Settings>(Configuration.GetSection("Settings"));
 
-            services.AddTransient<IStorageDatabase, MongoDatabase>();
+            var storageManager = new StorageManager();
+
+            storageManager.InitializeStorage(new MongoDatabase(new Settings()), new LiteDBDatabase());
+            
+            services.AddSingleton(storageManager);
 
             services.AddTransient<IQueue, RabbitQueue>();
         }
