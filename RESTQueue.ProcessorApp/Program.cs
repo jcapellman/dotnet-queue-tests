@@ -37,15 +37,8 @@ namespace RESTQueue.ProcessorApp
             {
                 var settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(Constants.FILENAME_SETTINGS));
 
-                var storageInitialization =
-                    _storageManager.InitializeStorage(new MongoDatabase(settings), new LiteDBDatabase());
+                _storageManager = new StorageManager(new MongoDatabase(settings), new LiteDBDatabase());
                 
-                if (!storageInitialization)
-                {
-                    throw new Exception(
-                        $"Both storage devices failed to initialize");
-                }
-
                 _dsManager = new DSManager();
 
                 _queue = new RabbitQueue(settings);

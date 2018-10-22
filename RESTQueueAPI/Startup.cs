@@ -20,7 +20,9 @@ namespace RESTQueueAPI
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -31,14 +33,17 @@ namespace RESTQueueAPI
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddOptions();
+
             services.Configure<Settings>(Configuration.GetSection("Settings"));
 
-            var storageManager = new StorageManager();
+            services.AddSingleton(Configuration);
 
-            storageManager.InitializeStorage(new MongoDatabase(new Settings()), new LiteDBDatabase());
+            services.AddSingleton<IStorageDatabase, MongoDatabase>();
+            services.AddSingleton<IStorageDatabase, LiteDBDatabase>();
+
+            services.AddSingleton(typeof(StorageManager));
             
-            services.AddSingleton(storageManager);
-
             services.AddTransient<IQueue, RabbitQueue>();
         }
         

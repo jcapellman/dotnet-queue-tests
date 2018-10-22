@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.Options;
 
+using NLog;
+
 using RawRabbit;
 using RawRabbit.Configuration;
 using RawRabbit.vNext;
@@ -16,6 +18,8 @@ namespace RESTQueue.lib.Queue
     {
         private readonly IBusClient _busClient;
 
+        private static Logger Log = LogManager.GetCurrentClassLogger();
+        
         public RabbitQueue(IOptions<Settings> settings) : this(settings.Value) { }
 
         public RabbitQueue(Settings settings)
@@ -43,6 +47,8 @@ namespace RESTQueue.lib.Queue
             }
             catch (Exception ex)
             {
+                Log.Error(ex);
+
                 return false;
             }
         }

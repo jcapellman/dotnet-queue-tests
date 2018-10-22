@@ -13,9 +13,9 @@ namespace RESTQueue.lib.Managers
     {
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
-        private List<IStorageDatabase> _storageDatabases;
+        private readonly List<IStorageDatabase> _storageDatabases;
 
-        public bool InitializeStorage(params IStorageDatabase[] databases)
+        public StorageManager(params IStorageDatabase[] databases)
         {
             _storageDatabases = new List<IStorageDatabase>(databases.Length);
 
@@ -23,8 +23,6 @@ namespace RESTQueue.lib.Managers
             {
                 _storageDatabases.Add(database);
             }
-
-            return true;
         }
 
         public async Task<QueryHashResponse> GetFromGUIDAsync(Guid guid)
