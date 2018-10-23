@@ -22,21 +22,37 @@ namespace RESTQueue.lib.DAL
         
         public MongoDatabase(Settings settings)
         {
-            var mongoSettings = new MongoClientSettings()
+            try
             {
-                Server = new MongoServerAddress(settings.DatabaseHostName, settings.DatabasePortNumber)
-            };
+                var mongoSettings = new MongoClientSettings()
+                {
+                    Server = new MongoServerAddress(settings.DatabaseHostName, settings.DatabasePortNumber)
+                };
 
-            var client = new MongoClient(mongoSettings);
+                var client = new MongoClient(mongoSettings);
 
-            _db = client.GetDatabase("results");
+                _db = client.GetDatabase("results");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Initializing {Name}");
+            }
         }
 
         public async Task<QueryHashResponse> GetFromGUIDAsync(Guid guid)
         {
-            var collection = _db.GetCollection<QueryHashResponse>("results");
+            try
+            {
+                var collection = _db.GetCollection<QueryHashResponse>("results");
 
-            return (await collection.FindAsync(a => a.Guid == guid)).FirstOrDefault();
+                return (await collection.FindAsync(a => a.Guid == guid)).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Attempting to get {guid} from {Name}");
+
+                return null;
+            }
         }
 
         public async Task<bool> Insert(QueryHashResponse item)
@@ -57,7 +73,7 @@ namespace RESTQueue.lib.DAL
             }
         }
 
-        public bool IsOnline() => _db.Client.StartSession().ServerSession.Id != null;
+        public bool IsOnline() => _db?.Client?.StartSession()?.ServerSession.Id != null;
 
         public string Name => "MongoDB";
     }
