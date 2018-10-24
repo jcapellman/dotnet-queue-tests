@@ -1,4 +1,6 @@
-﻿using RESTQueue.lib.Models;
+﻿using System.Threading.Tasks;
+
+using RESTQueue.lib.Models;
 
 namespace RESTQueue.lib.CacheDAL
 {
@@ -6,6 +8,8 @@ namespace RESTQueue.lib.CacheDAL
     {
         QueryHashResponse GetResponse(string md5Hash);
 
-        bool AddResponse(QueryHashResponse response);
+        Task<bool> AddResponseAsync(QueryHashResponse response);
+
+        string Name { get; }
     }
 }
