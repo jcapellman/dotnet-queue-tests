@@ -6,8 +6,8 @@ namespace RESTQueue.lib.CacheDAL
 {
     public interface ICache
     {
-        QueryHashResponse GetResponse(string md5Hash);
-
+        Task<QueryHashResponse> GetResponseAsync(string md5Hash);
+        
         Task<bool> AddResponseAsync(QueryHashResponse response);
 
         string Name { get; }
