@@ -16,24 +16,22 @@ namespace RESTQueue.lib.CacheDAL
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        private readonly ConnectionMultiplexer _redisConnectionMultiplexer;
-
         private readonly IDatabase _database;
         
         public string Name => "Redis";
 
         public RedisCache(Settings settings)
         {
-            _redisConnectionMultiplexer = ConnectionMultiplexer.Connect(settings.CacheHostName);
+            var redisConnectionMultiplexer = ConnectionMultiplexer.Connect($"{settings.CacheHostName}:{settings.CachePortNumber}");
 
-            _database = _redisConnectionMultiplexer.GetDatabase();
+            _database = redisConnectionMultiplexer.GetDatabase();
         }
 
-        public QueryHashResponse GetResponse(string md5Hash)
+        public async Task<QueryHashResponse> GetResponseAsync(string md5Hash)
         {
             try
             {
-                string result = _database.StringGet(md5Hash);
+                string result = await _database.StringGetAsync(md5Hash);
 
                 return result == RedisValue.Null ? null : JsonConvert.DeserializeObject<QueryHashResponse>(result);
             }
