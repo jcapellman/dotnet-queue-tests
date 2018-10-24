@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using NLog;
@@ -24,6 +25,8 @@ namespace RESTQueue.lib.Managers
                 _storageDatabases.Add(database);
             }
         }
+
+        public IEnumerable<(string Name, bool IsOnline)> GetStorageDatabaseStatuses() => _storageDatabases.Select(a => (a.Name, a.IsOnline());
 
         public async Task<QueryHashResponse> GetFromGUIDAsync(Guid guid)
         {
