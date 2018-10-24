@@ -11,7 +11,7 @@ namespace RESTQueue.lib.Managers
 {
     public class StorageManager
     {
-        private static Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         private readonly List<IStorageDatabase> _storageDatabases;
 
@@ -31,12 +31,14 @@ namespace RESTQueue.lib.Managers
             {
                 var result = await database.GetFromGUIDAsync(guid);
 
-                if (result != null)
+                if (result == null)
                 {
-                    Log.Debug($"{database.Name} obtained {guid} successfully {result}");
-
-                    return result;
+                    continue;
                 }
+
+                Log.Debug($"{database.Name} obtained {guid} successfully {result}");
+
+                return result;
             }
 
             Log.Warn($"Could not retreieve {guid} in any storage device");
@@ -50,12 +52,14 @@ namespace RESTQueue.lib.Managers
             {
                 var result = await database.Insert(response);
 
-                if (result)
+                if (!result)
                 {
-                    Log.Debug($"{database.Name} inserted {response} successfully");
-
-                    return true;
+                    continue;
                 }
+
+                Log.Debug($"{database.Name} inserted {response} successfully");
+
+                return true;
             }
 
             Log.Warn($"Could not log {response} in any storage device");
