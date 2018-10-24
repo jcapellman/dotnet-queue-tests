@@ -13,5 +13,9 @@
         public string QueueUsername;
 
         public string QueuePassword;
+
+        public string CacheHostName;
+
+        public string CachePortNumber;
     }
 }
