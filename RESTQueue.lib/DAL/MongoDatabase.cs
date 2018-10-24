@@ -14,7 +14,7 @@ namespace RESTQueue.lib.DAL
 {
     public class MongoDatabase : IStorageDatabase
     {
-        private static Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         private readonly IMongoDatabase _db;
 
