@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RESTQueue.lib", "RESTQueue.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "TestApp\TestApp.csproj", "{F07022F8-A7F8-4870-8F47-859FCD3F3D40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RESTQueue.ProcessorApp", "RESTQueue.ProcessorApp\RESTQueue.ProcessorApp.csproj", "{E5B9BD4A-9155-4D14-BC8F-5DB4F85A44E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RESTQueue.ProcessorApp", "RESTQueue.ProcessorApp\RESTQueue.ProcessorApp.csproj", "{E5B9BD4A-9155-4D14-BC8F-5DB4F85A44E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RESTQueue.lib.datascience", "RESTQueue.lib.datascience\RESTQueue.lib.datascience.csproj", "{C058C8E9-C016-4E5B-BFB4-930F37137733}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RESTQueue.lib.datascience", "RESTQueue.lib.datascience\RESTQueue.lib.datascience.csproj", "{C058C8E9-C016-4E5B-BFB4-930F37137733}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RESTQueue.UnitTests", "RESTQueue.UnitTests\RESTQueue.UnitTests.csproj", "{1E28187B-2A9E-4EE8-AE05-0055FAC5C722}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{C058C8E9-C016-4E5B-BFB4-930F37137733}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C058C8E9-C016-4E5B-BFB4-930F37137733}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C058C8E9-C016-4E5B-BFB4-930F37137733}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E28187B-2A9E-4EE8-AE05-0055FAC5C722}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E28187B-2A9E-4EE8-AE05-0055FAC5C722}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E28187B-2A9E-4EE8-AE05-0055FAC5C722}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E28187B-2A9E-4EE8-AE05-0055FAC5C722}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
