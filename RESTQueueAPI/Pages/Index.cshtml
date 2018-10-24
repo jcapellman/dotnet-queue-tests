@@ -1,17 +1,20 @@
 ﻿@page
 
-@using RESTQueue.lib.DAL
+@using RESTQueue.lib.Managers
 @using RESTQueue.lib.Queue
 
 @model IndexModel
 
-@inject IStorageDatabase Database;
+@inject StorageManager StorageManager;
 @inject IQueue Queue;
 
 <h2>Server Status</h2>
 
-<h3>@Database.Name (Database) Status</h3>
-<p>Is Online: @Database.IsOnline()</p>
+@foreach (var database in StorageManager.GetStorageDatabaseStatuses())
+{
+    <h3>@database.Name (Database) Status</h3>
+    <p>Is Online: @database.IsOnline</p>
+}
 
 <h3>@Queue.Name (Queue) Status</h3>
 <p>Is Online: @Queue.IsOnline()</p>
