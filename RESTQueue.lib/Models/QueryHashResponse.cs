@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
+using Newtonsoft.Json;
+
 using RESTQueue.lib.Common;
 using RESTQueue.lib.Enums;
 
@@ -26,5 +28,7 @@ namespace RESTQueue.lib.Models
 
         public override string ToString() => 
             $"{Guid}::{Status}::{MD5Hash ?? Constants.RESPONSE_HASH_NOT_SET}::IsMalicious={IsMalicious}::{ErrorMessage ?? Constants.RESPONSE_NO_ERROR}";
+
+        public string ToJSON() => JsonConvert.SerializeObject(this);
     }
 }
