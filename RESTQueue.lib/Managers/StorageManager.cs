@@ -26,7 +26,7 @@ namespace RESTQueue.lib.Managers
             }
         }
 
-        public IEnumerable<(string Name, bool IsOnline)> GetStorageDatabaseStatuses() => _storageDatabases.Select(a => (a.Name, a.IsOnline());
+        public IEnumerable<(string Name, bool IsOnline)> GetStorageDatabaseStatuses() => _storageDatabases.Select(a => (a.Name, a.IsOnline()));
 
         public async Task<QueryHashResponse> GetFromGUIDAsync(Guid guid)
         {
