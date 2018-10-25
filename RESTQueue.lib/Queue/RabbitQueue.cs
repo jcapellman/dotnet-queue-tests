@@ -24,15 +24,25 @@ namespace RESTQueue.lib.Queue
 
         public RabbitQueue(Settings settings)
         {
-            var config = new RawRabbitConfiguration()
+            try
             {
-                Port = settings.QueuePortNumber,
-                Username = settings.QueueUsername,
-                Password = settings.QueuePassword,
-                Hostnames = new List<string> {settings.QueueHostName}
-            };
+                var config = new RawRabbitConfiguration()
+                {
+                    Port = settings.QueuePortNumber,
+                    Username = settings.QueueUsername,
+                    Password = settings.QueuePassword,
+                    Hostnames = new List<string>
+                    {
+                        settings.QueueHostName
+                    }
+                };
 
-            _busClient = BusClientFactory.CreateDefault(config);
+                _busClient = BusClientFactory.CreateDefault(config);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error establishing connection to Queue");
+            }
         }
         
         public bool IsOnline() => _busClient != null;
