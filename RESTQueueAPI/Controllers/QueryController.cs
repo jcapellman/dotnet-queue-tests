@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 using RESTQueue.lib.CacheDAL;
 using RESTQueue.lib.Common;
@@ -19,7 +20,7 @@ namespace RESTQueueAPI.Controllers
     public class QueryController : BaseController
     {
         public QueryController(IQueue queue, StorageManager storageManager, ILoggerFactory logger, ICache cache,
-            Settings settings) : base(queue, storageManager, logger, settings, cache)
+            IOptions<Settings> settings) : base(queue, storageManager, logger, settings.Value, cache)
         {
         }
 
