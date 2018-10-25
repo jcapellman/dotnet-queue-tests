@@ -81,7 +81,11 @@ namespace RESTQueueAPI.Controllers
 
                             return response;
                         }
+
+                        Logger.LogDebug($"{Cache.Name} did not contain {md5Hash}");
                     }
+
+                    Logger.LogDebug($"Adding {response.Guid} to the Queue");
 
                     await Queue.AddToQueueAsync(memoryStream.ToArray(), response.Guid);
                 }

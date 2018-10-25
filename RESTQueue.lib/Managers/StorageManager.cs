@@ -36,6 +36,8 @@ namespace RESTQueue.lib.Managers
 
                 if (result == null)
                 {
+                    Log.Debug($"{database.Name} did not get a match on {guid}");
+
                     continue;
                 }
 
