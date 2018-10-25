@@ -12,6 +12,7 @@ using NLog;
 using RawRabbit.Context;
 using RawRabbit.vNext;
 
+using RESTQueue.lib.CacheDAL;
 using RESTQueue.lib.Common;
 using RESTQueue.lib.datascience;
 using RESTQueue.lib.DAL;
@@ -28,24 +29,31 @@ namespace RESTQueue.ProcessorApp
         private static RabbitQueue _queue;
         private static DSManager _dsManager;
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        
+        private static Settings Settings;
+        private static ICache Cache;
+
         private static List<MessageProcessor> _processors;
 
         static void Main(string[] args)
         {
             try
             {
-                var settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(Constants.FILENAME_SETTINGS));
+                Settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(Constants.FILENAME_SETTINGS));
 
-                _storageManager = new StorageManager(new MongoDatabase(settings), new LiteDBDatabase());
+                _storageManager = new StorageManager(new MongoDatabase(Settings), new LiteDBDatabase());
                 
                 _dsManager = new DSManager();
 
-                _queue = new RabbitQueue(settings);
+                _queue = new RabbitQueue(Settings);
 
                 if (!_queue.IsOnline())
                 {
                     throw new Exception("Rabbit MQ could not be established");
+                }
+
+                if (Settings.CacheEnabled)
+                {
+                    Cache = new RedisCache(Settings);
                 }
 
                 _processors = new List<MessageProcessor>();
@@ -94,7 +102,19 @@ namespace RESTQueue.ProcessorApp
                 Log.Error("Failed to write to storage, adding back into the queue");
 
                 context.RetryLater(TimeSpan.FromSeconds(Constants.QUEUE_RETRY_SECONDS));
-            }   
+
+                return;
+            }
+
+            if (Settings.CacheEnabled)
+            {
+                var cacheResult = await Cache.AddResponseAsync(queryHashResponse);
+
+                if (!cacheResult)
+                {
+                    Log.Error($"Failed to write to {Cache.Name} cache");
+                }
+            }
         }
     }
 }
