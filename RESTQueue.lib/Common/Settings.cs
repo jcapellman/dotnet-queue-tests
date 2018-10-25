@@ -17,5 +17,7 @@
         public string CacheHostName;
 
         public string CachePortNumber;
+
+        public bool CacheEnabled { get; set; }
     }
 }
