@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Options;
+
 using Newtonsoft.Json;
 
 using NLog;
@@ -20,9 +22,9 @@ namespace RESTQueue.lib.CacheDAL
         
         public string Name => "Redis";
 
-        public RedisCache(Settings settings)
+        public RedisCache(IOptions<Settings> settings)
         {
-            var redisConnectionMultiplexer = ConnectionMultiplexer.Connect($"{settings.CacheHostName}:{settings.CachePortNumber}");
+            var redisConnectionMultiplexer = ConnectionMultiplexer.Connect($"{settings.Value.CacheHostName}:{settings.Value.CachePortNumber}");
 
             _database = redisConnectionMultiplexer.GetDatabase();
         }
