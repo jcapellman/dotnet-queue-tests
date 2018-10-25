@@ -2,22 +2,22 @@
 {
     public class Settings
     {
-        public string DatabaseHostName;
+        public string DatabaseHostName { get; set; }
 
-        public int DatabasePortNumber;
+        public int DatabasePortNumber { get; set; }
 
-        public string QueueHostName;
+        public string QueueHostName { get; set; }
 
-        public int QueuePortNumber;
+        public int QueuePortNumber { get; set; }
 
-        public string QueueUsername;
+        public string QueueUsername { get; set; }
 
-        public string QueuePassword;
-
-        public string CacheHostName;
-
-        public string CachePortNumber;
+        public string QueuePassword { get; set; }
 
         public bool CacheEnabled { get; set; }
+
+        public int CachePortNumber { get; set; }
+
+        public string CacheHostName { get; set; }
     }
 }
