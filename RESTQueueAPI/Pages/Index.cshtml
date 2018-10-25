@@ -26,4 +26,7 @@
 
 <h3>Settings</h3>
 <p>Cache Enabled: @Settings.Value.CacheEnabled</p>
-<p>Cache: (@Settings.Value.CacheEnabled ? @Cache.Name : "Not Set")</p>
+@if (Settings.Value.CacheEnabled)
+{
+    <p>Cache: @Cache.Name</p>
+}
