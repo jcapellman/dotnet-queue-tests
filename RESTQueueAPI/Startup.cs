@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 
 using NLog.Extensions.Logging;
 
+using RESTQueue.lib.CacheDAL;
 using RESTQueue.lib.Common;
 using RESTQueue.lib.DAL;
 using RESTQueue.lib.Managers;
@@ -42,6 +43,8 @@ namespace RESTQueueAPI
             services.AddSingleton<IStorageDatabase, MongoDatabase>();
             services.AddSingleton<IStorageDatabase, LiteDBDatabase>();
 
+            services.AddSingleton<ICache, RedisCache>();
+            
             services.AddSingleton(typeof(StorageManager));
             
             services.AddTransient<IQueue, RabbitQueue>();
