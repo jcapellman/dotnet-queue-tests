@@ -1,5 +1,6 @@
 ﻿@page
 
+@using Microsoft.Extensions.Options
 @using RESTQueue.lib.CacheDAL
 @using RESTQueue.lib.Common
 @using RESTQueue.lib.Managers
@@ -10,7 +11,7 @@
 @inject StorageManager StorageManager;
 @inject IQueue Queue;
 @inject ICache Cache;
-@inject Settings Settings;
+@inject IOptions<Settings> Settings;
 
 <h2>Server Status</h2>
 
@@ -24,5 +25,5 @@
 <p>Is Online: @Queue.IsOnline()</p>
 
 <h3>Settings</h3>
-<p>Cache Enabled: @Settings.CacheEnabled</p>
-<p>Cache: (@Settings.CacheEnabled ? @Cache.Name : "Not Set")</p>
+<p>Cache Enabled: @Settings.Value.CacheEnabled</p>
+<p>Cache: (@Settings.Value.CacheEnabled ? @Cache.Name : "Not Set")</p>
