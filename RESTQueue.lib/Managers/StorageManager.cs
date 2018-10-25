@@ -16,9 +16,9 @@ namespace RESTQueue.lib.Managers
 
         private readonly List<IStorageDatabase> _storageDatabases;
 
-        public StorageManager(params IStorageDatabase[] databases)
+        public StorageManager(IEnumerable<IStorageDatabase> databases)
         {
-            _storageDatabases = new List<IStorageDatabase>(databases.Length);
+            _storageDatabases = new List<IStorageDatabase>();
 
             foreach (var database in databases)
             {
