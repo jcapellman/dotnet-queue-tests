@@ -2,7 +2,8 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-
+using RESTQueue.lib.CacheDAL;
+using RESTQueue.lib.Common;
 using RESTQueue.lib.Enums;
 using RESTQueue.lib.Managers;
 using RESTQueue.lib.Models;
@@ -17,12 +18,16 @@ namespace RESTQueueAPI.Controllers
         protected readonly IQueue Queue;
         protected readonly StorageManager StorageManager;
         protected readonly ILogger Logger;
-        
-        public BaseController(IQueue queue, StorageManager storageManager, ILoggerFactory loggerFactory)
+        protected readonly Settings Settings;
+        protected readonly ICache Cache;
+
+        public BaseController(IQueue queue, StorageManager storageManager, ILoggerFactory loggerFactory, Settings settings, ICache cache)
         {
             Queue = queue;
             StorageManager = storageManager;
             Logger = loggerFactory.CreateLogger(GetType().Namespace);
+            Settings = settings;
+            Cache = cache;
         }
 
         protected QueryHashResponse ReturnErrorResponse(Exception exception, Guid guid, string additionalError = null)
