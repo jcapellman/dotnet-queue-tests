@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.IO;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +20,10 @@ namespace RESTQueueAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IHostingEnvironment env)
         {
-            var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
+            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
 
             Configuration = builder.Build();
         }
@@ -35,11 +37,9 @@ namespace RESTQueueAPI
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddOptions();
-
+            
             services.Configure<Settings>(Configuration.GetSection("Settings"));
-
-            services.AddSingleton(Configuration);
-
+            
             services.AddSingleton<IStorageDatabase, MongoDatabase>();
             services.AddSingleton<IStorageDatabase, LiteDBDatabase>();
             
