@@ -42,7 +42,7 @@ namespace RESTQueueAPI
 
             services.AddSingleton<IStorageDatabase, MongoDatabase>();
             services.AddSingleton<IStorageDatabase, LiteDBDatabase>();
-
+            
             services.AddSingleton<ICache, RedisCache>();
             
             services.AddSingleton(typeof(StorageManager));

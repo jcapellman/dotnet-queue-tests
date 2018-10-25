@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 using NLog;
@@ -53,7 +53,7 @@ namespace RESTQueue.ProcessorApp
 
                 if (Settings.CacheEnabled)
                 {
-                    Cache = new RedisCache(Settings);
+                    Cache = new RedisCache(null);
                 }
 
                 _processors = new List<MessageProcessor>();
