@@ -4,8 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 using NLog;
 
@@ -19,43 +20,47 @@ using RESTQueue.lib.DAL;
 using RESTQueue.lib.Enums;
 using RESTQueue.lib.Managers;
 using RESTQueue.lib.Models;
-using RESTQueue.lib.Queue;
 
 namespace RESTQueue.ProcessorApp
 {
     public class Program
     {
-        private static StorageManager _storageManager= new StorageManager();
-        private static RabbitQueue _queue;
         private static DSManager _dsManager;
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        private static Settings Settings;
-        private static ICache Cache;
 
         private static List<MessageProcessor> _processors;
+
+        public static IConfiguration Configuration { get; set; }
+
+        private static ServiceProvider _serviceProvider;
 
         static void Main(string[] args)
         {
             try
             {
-                Settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(Constants.FILENAME_SETTINGS));
+                var builder = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json");
 
-                _storageManager = new StorageManager(new MongoDatabase(Settings), new LiteDBDatabase());
+                Configuration = builder.Build();
+
+                var services = new ServiceCollection();
                 
+                services.AddOptions();
+
+                services.Configure<Settings>(Configuration.GetSection("Settings"));
+
+                services.AddSingleton<IStorageDatabase, MongoDatabase>();
+                services.AddSingleton<IStorageDatabase, LiteDBDatabase>();
+
+                services.AddSingleton<ICache, RedisCache>();
+
+                services.AddSingleton(typeof(StorageManager));
+
+                _serviceProvider = services.BuildServiceProvider();
+
                 _dsManager = new DSManager();
-
-                _queue = new RabbitQueue(Settings);
-
-                if (!_queue.IsOnline())
-                {
-                    throw new Exception("Rabbit MQ could not be established");
-                }
-
-                if (Settings.CacheEnabled)
-                {
-                    Cache = new RedisCache(null);
-                }
-
+                
                 _processors = new List<MessageProcessor>();
 
                 for (var x = 0; x < Environment.ProcessorCount; x++)
@@ -95,7 +100,7 @@ namespace RESTQueue.ProcessorApp
                 MD5Hash = MD5.Create().ComputeHash(data).ToString()
             };
 
-            var insertResult = await _storageManager.InsertAsync(queryHashResponse);
+            var insertResult = await _serviceProvider.GetService<StorageManager>().InsertAsync(queryHashResponse);
 
             if (!insertResult)
             {
@@ -106,13 +111,13 @@ namespace RESTQueue.ProcessorApp
                 return;
             }
 
-            if (Settings.CacheEnabled)
+            if (_serviceProvider.GetService<Settings>().CacheEnabled)
             {
-                var cacheResult = await Cache.AddResponseAsync(queryHashResponse);
+                var cacheResult = await _serviceProvider.GetService<ICache>().AddResponseAsync(queryHashResponse);
 
                 if (!cacheResult)
                 {
-                    Log.Error($"Failed to write to {Cache.Name} cache");
+                    Log.Error($"Failed to write to {_serviceProvider.GetService<ICache>().Name} cache");
                 }
             }
         }
