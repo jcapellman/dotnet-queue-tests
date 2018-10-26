@@ -31,6 +31,7 @@ namespace RESTQueue.lib.Queue
                     Port = settings.QueuePortNumber,
                     Username = settings.QueueUsername,
                     Password = settings.QueuePassword,
+                    VirtualHost = "/",
                     Hostnames = new List<string>
                     {
                         settings.QueueHostName
