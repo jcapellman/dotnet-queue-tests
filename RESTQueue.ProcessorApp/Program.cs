@@ -84,7 +84,7 @@ namespace RESTQueue.ProcessorApp
 
             if (processor == null)
             {
-                // Keep message queued in RabbitMQ
+                // Keep message queued
                 context.RetryLater(TimeSpan.FromSeconds(Constants.QUEUE_RETRY_SECONDS));
 
                 return;
