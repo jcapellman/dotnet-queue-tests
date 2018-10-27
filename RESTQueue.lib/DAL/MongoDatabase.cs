@@ -18,8 +18,18 @@ namespace RESTQueue.lib.DAL
 
         private readonly IMongoDatabase _db;
 
+        public string Name => "MongoDB";
+
+        /// <summary>
+        /// Initializes the Settings into the MongoDB
+        /// </summary>
+        /// <param name="settings">Settings of the App</param>
         public MongoDatabase(IOptions<Settings> settings) : this(settings.Value) { }
-        
+
+        /// <summary>
+        /// Initializes the Settings into the MongoDB
+        /// </summary>
+        /// <param name="settings">Settings of the App</param>
         public MongoDatabase(Settings settings)
         {
             try
@@ -39,6 +49,11 @@ namespace RESTQueue.lib.DAL
             }
         }
 
+        /// <summary>
+        /// Retrieves the Query Hash Response given the Guid from MongoDB
+        /// </summary>
+        /// <param name="guid">Guid of the response</param>
+        /// <returns>Null if not found or the response</returns>
         public async Task<QueryHashResponse> GetFromGUIDAsync(Guid guid)
         {
             try
@@ -55,6 +70,11 @@ namespace RESTQueue.lib.DAL
             }
         }
 
+        /// <summary>
+        /// Inserts the QueryHashResponse item into the MongoDB
+        /// </summary>
+        /// <param name="item">QueryHashResponse to be added to the database</param>
+        /// <returns>True if successfull, false otherwise</returns>
         public async Task<bool> Insert(QueryHashResponse item)
         {
             try
@@ -73,8 +93,10 @@ namespace RESTQueue.lib.DAL
             }
         }
 
+        /// <summary>
+        /// Checks the connection status of MongoDB
+        /// </summary>
+        /// <returns>True if online, false otherwise</returns>
         public bool IsOnline() => _db?.Client?.StartSession()?.ServerSession.Id != null;
-
-        public string Name => "MongoDB";
     }
 }
