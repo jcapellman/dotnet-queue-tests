@@ -20,10 +20,15 @@ namespace RESTQueue.lib.DAL
 
         public async Task<bool> Insert(QueryHashResponse item)
         {
-            await Task.Run(() =>
+            return await Task.Run(() =>
             {
                 try
                 {
+                    if (item == null)
+                    {
+                        throw new ArgumentNullException(nameof(item));
+                    }
+
                     using (var db = new LiteDB.LiteDatabase(DB_FILE_NAME))
                     {
                         var collection = db.GetCollection<QueryHashResponse>();
@@ -38,8 +43,6 @@ namespace RESTQueue.lib.DAL
                     return false;
                 }
             });
-
-            return true;
         }
 
         public bool IsOnline()
