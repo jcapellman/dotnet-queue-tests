@@ -79,8 +79,13 @@ namespace RESTQueue.lib.DAL
         {
             try
             {
-                var collection = _db.GetCollection<QueryHashResponse>("results");
+                if (string.IsNullOrEmpty(item.MD5Hash))
+                {
+                    throw new ArgumentNullException(nameof(item.MD5Hash));
+                }
 
+                var collection = _db.GetCollection<QueryHashResponse>("results");
+                
                 await collection.InsertOneAsync(item);
 
                 return true;
