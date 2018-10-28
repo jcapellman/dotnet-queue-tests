@@ -34,6 +34,11 @@ namespace RESTQueue.lib.DAL
         {
             try
             {
+                if (settings == null)
+                {
+                    throw new ArgumentNullException(nameof(settings));
+                }
+
                 var mongoSettings = new MongoClientSettings()
                 {
                     Server = new MongoServerAddress(settings.DatabaseHostName, settings.DatabasePortNumber)
@@ -46,6 +51,8 @@ namespace RESTQueue.lib.DAL
             catch (Exception ex)
             {
                 Log.Error(ex, $"Initializing {Name}");
+
+                throw;
             }
         }
 
