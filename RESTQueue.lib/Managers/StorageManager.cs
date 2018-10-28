@@ -58,6 +58,11 @@ namespace RESTQueue.lib.Managers
 
         public async Task<bool> InsertAsync(QueryHashResponse response)
         {
+            if (response == null)
+            {
+                throw new ArgumentNullException(nameof(response));
+            }
+
             foreach (var database in _storageDatabases)
             {
                 var result = await database.Insert(response);
