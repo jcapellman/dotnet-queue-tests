@@ -18,6 +18,11 @@ namespace RESTQueue.lib.Managers
 
         public StorageManager(IEnumerable<IStorageDatabase> databases)
         {
+            if (databases == null)
+            {
+                throw new ArgumentNullException(nameof(databases));
+            }
+
             _storageDatabases = new List<IStorageDatabase>();
 
             foreach (var database in databases)
