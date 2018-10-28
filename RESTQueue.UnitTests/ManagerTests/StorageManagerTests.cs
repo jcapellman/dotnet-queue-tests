@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using RESTQueue.lib.DAL;
+using RESTQueue.lib.Enums;
 using RESTQueue.lib.Managers;
+using RESTQueue.lib.Models;
 
 namespace RESTQueue.UnitTests.ManagerTests
 {
@@ -54,6 +56,28 @@ namespace RESTQueue.UnitTests.ManagerTests
             });
 
             var result = await storageManager.InsertAsync(null);
+        }
+
+        [TestMethod]
+        public async Task InsertDefault()
+        {
+            var storageManager = new StorageManager(new List<IStorageDatabase>
+            {
+                new LiteDBDatabase()
+            });
+
+            var query = new QueryHashResponse
+            {
+                Guid = Guid.NewGuid(),
+                MD5Hash = "1234",
+                Status = ResponseStatus.PENDING,
+                ErrorMessage = string.Empty,
+                IsMalicious = false
+            };
+
+            var result = await storageManager.InsertAsync(query);
+
+            Assert.IsTrue(result);
         }
     }
 }
