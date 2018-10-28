@@ -81,7 +81,8 @@ namespace RESTQueue.UnitTests.ManagerTests
         }
 
         [TestMethod]
-        public async Task GetFromGUIDAsyncNotFound()
+        [ExpectedException(typeof(ArgumentException))]
+        public async Task GetFromGUIDAsyncGuidEmpty()
         {
             var storageManager = new StorageManager(new List<IStorageDatabase>
             {
@@ -89,8 +90,6 @@ namespace RESTQueue.UnitTests.ManagerTests
             });
 
             var result = await storageManager.GetFromGUIDAsync(Guid.Empty);
-
-            Assert.IsNull(result);
         }
     }
 }
