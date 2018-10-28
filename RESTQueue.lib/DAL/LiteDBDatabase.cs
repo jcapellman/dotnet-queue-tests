@@ -29,6 +29,11 @@ namespace RESTQueue.lib.DAL
                         throw new ArgumentNullException(nameof(item));
                     }
 
+                    if (string.IsNullOrEmpty(item.MD5Hash))
+                    {
+                        throw new ArgumentNullException(nameof(item.MD5Hash));
+                    }
+
                     using (var db = new LiteDB.LiteDatabase(DB_FILE_NAME))
                     {
                         var collection = db.GetCollection<QueryHashResponse>();
