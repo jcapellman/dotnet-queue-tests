@@ -35,6 +35,11 @@ namespace RESTQueue.lib.Managers
 
         public async Task<QueryHashResponse> GetFromGUIDAsync(Guid guid)
         {
+            if (guid == Guid.Empty)
+            {
+                throw new ArgumentException($"Guid is equal to {guid}");
+            }
+
             foreach (var database in _storageDatabases)
             {
                 var result = await database.GetFromGUIDAsync(guid);
