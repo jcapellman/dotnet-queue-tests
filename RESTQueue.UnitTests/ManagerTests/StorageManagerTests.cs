@@ -79,5 +79,18 @@ namespace RESTQueue.UnitTests.ManagerTests
 
             Assert.IsTrue(result);
         }
+
+        [TestMethod]
+        public async Task GetFromGUIDAsyncNotFound()
+        {
+            var storageManager = new StorageManager(new List<IStorageDatabase>
+            {
+                new LiteDBDatabase()
+            });
+
+            var result = await storageManager.GetFromGUIDAsync(Guid.Empty);
+
+            Assert.IsNull(result);
+        }
     }
 }
