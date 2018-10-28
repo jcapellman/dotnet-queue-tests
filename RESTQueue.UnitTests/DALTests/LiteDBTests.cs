@@ -59,5 +59,13 @@ namespace RESTQueue.UnitTests.DALTests
 
             await liteDB.GetFromGUIDAsync(Guid.Empty);
         }
+
+        [TestMethod]
+        public void IsOnline()
+        {
+            var liteDB = new LiteDBDatabase();
+
+            Assert.IsTrue(liteDB.IsOnline());
+        }
     }
 }
