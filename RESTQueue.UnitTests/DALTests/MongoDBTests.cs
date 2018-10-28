@@ -100,5 +100,12 @@ namespace RESTQueue.UnitTests.DALTests
 
             Assert.IsTrue(mongo.IsOnline());
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void SettingsNullTest()
+        {
+            var mongo = new MongoDatabase(settings: (Settings) null);
+        }
     }
 }
