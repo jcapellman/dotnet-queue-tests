@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
+using LiteDB;
+
 using Newtonsoft.Json;
 
 using RESTQueue.lib.Common;
@@ -11,6 +13,7 @@ namespace RESTQueue.lib.Models
     [DataContract]
     public class QueryHashResponse
     {
+        [BsonId]
         [DataMember]
         public Guid Guid { get; set; }
 
