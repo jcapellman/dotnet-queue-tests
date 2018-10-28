@@ -82,5 +82,15 @@ namespace RESTQueue.UnitTests.DALTests
 
             Assert.IsFalse(result);
         }
+
+        [TestMethod]
+        public async Task GetGuidEmptyTask()
+        {
+            var mongo = new MongoDatabase(_settings);
+
+            var result = await mongo.GetFromGUIDAsync(Guid.Empty);
+
+            Assert.IsNull(result);
+        }
     }
 }
