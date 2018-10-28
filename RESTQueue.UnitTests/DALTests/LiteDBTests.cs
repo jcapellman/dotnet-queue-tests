@@ -50,5 +50,14 @@ namespace RESTQueue.UnitTests.DALTests
 
             Assert.IsTrue(result);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(NotImplementedException))]
+        public async Task GetFromGUIDAsync()
+        {
+            var liteDB = new LiteDBDatabase();
+
+            await liteDB.GetFromGUIDAsync(Guid.Empty);
+        }
     }
 }
