@@ -67,5 +67,13 @@ namespace RESTQueue.UnitTests.DALTests
 
             Assert.IsTrue(liteDB.IsOnline());
         }
+
+        [TestMethod]
+        public void ToJSONTest()
+        {
+            var response = new QueryHashResponse();
+
+            Assert.IsNotNull(response.ToJSON());
+        }
     }
 }
