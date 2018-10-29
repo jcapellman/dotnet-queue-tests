@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+using RESTQueue.lib.Common;
 using RESTQueue.lib.DAL;
 using RESTQueue.lib.Enums;
 using RESTQueue.lib.Managers;
@@ -90,6 +90,25 @@ namespace RESTQueue.UnitTests.ManagerTests
             });
 
             var result = await storageManager.GetFromGUIDAsync(Guid.Empty);
+        }
+
+        private Settings MongoSettings => new Settings
+        {
+            DatabaseHostName = "localhost",
+            DatabasePortNumber = 27017
+        };
+
+        [TestMethod]
+        public async Task GetFromGUIDAsyncGuidMongo()
+        {
+            var storageManager = new StorageManager(new List<IStorageDatabase>
+            {
+                new MongoDatabase(MongoSettings)
+            });
+
+            var result = await storageManager.GetFromGUIDAsync(Guid.NewGuid());
+
+            Assert.IsNull(result);
         }
 
         [TestMethod]
