@@ -91,5 +91,17 @@ namespace RESTQueue.UnitTests.ManagerTests
 
             var result = await storageManager.GetFromGUIDAsync(Guid.Empty);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(NotImplementedException))]
+        public async Task GetFromGUIDAsyncGuidLiteDBOnly()
+        {
+            var storageManager = new StorageManager(new List<IStorageDatabase>
+            {
+                new LiteDBDatabase()
+            });
+
+            await storageManager.GetFromGUIDAsync(Guid.NewGuid());
+        }
     }
 }
