@@ -18,7 +18,7 @@ namespace RESTQueue.lib.Queue
     {
         private readonly IBusClient _busClient;
 
-        private static Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         
         public RabbitQueue(IOptions<Settings> settings) : this(settings.Value) { }
 
@@ -26,6 +26,11 @@ namespace RESTQueue.lib.Queue
         {
             try
             {
+                if (settings == null)
+                {
+                    throw new ArgumentNullException(nameof(settings));
+                }
+
                 var config = new RawRabbitConfiguration()
                 {
                     Port = settings.QueuePortNumber,
@@ -43,6 +48,8 @@ namespace RESTQueue.lib.Queue
             catch (Exception ex)
             {
                 Log.Error(ex, "Error establishing connection to Queue");
+
+                throw;
             }
         }
         
