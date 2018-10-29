@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -15,6 +16,24 @@ namespace RESTQueue.UnitTests.QueueTests
         public void InitializeNull()
         {
             var rabbit = new RabbitQueue(settings: (Settings) null);
+        }
+
+        private Settings ValidRabbitSettings => new Settings
+        {
+            QueueHostName = "localhost",
+            QueuePortNumber = 5672,
+            QueuePassword = "guest",
+            QueueUsername = "guest"
+        };
+
+        [TestMethod]
+        public async Task InsertNull()
+        {
+            var rabbit = new RabbitQueue(ValidRabbitSettings);
+
+            var result = await rabbit.AddToQueueAsync(null, Guid.Empty);
+
+            Assert.IsFalse(result);
         }
     }
 }
