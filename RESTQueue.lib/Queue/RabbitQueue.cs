@@ -59,6 +59,16 @@ namespace RESTQueue.lib.Queue
         {
             try
             {
+                if (data == null)
+                {
+                    throw new ArgumentNullException(nameof(data));
+                }
+
+                if (guid == Guid.Empty)
+                {
+                    throw new ArgumentException(nameof(guid));
+                }
+
                 await _busClient.PublishAsync(data, guid);
 
                 return true;
