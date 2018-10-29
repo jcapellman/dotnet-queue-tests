@@ -35,5 +35,15 @@ namespace RESTQueue.UnitTests.QueueTests
 
             Assert.IsFalse(result);
         }
+
+        [TestMethod]
+        public async Task InsertEmptyGuidEmpty()
+        {
+            var rabbit = new RabbitQueue(ValidRabbitSettings);
+
+            var result = await rabbit.AddToQueueAsync(new byte[0], Guid.Empty);
+
+            Assert.IsFalse(result);
+        }
     }
 }
