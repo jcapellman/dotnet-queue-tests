@@ -22,11 +22,29 @@ namespace RESTQueue.lib.CacheDAL
         
         public string Name => "Redis";
 
-        public RedisCache(IOptions<Settings> settings)
+        public RedisCache(IOptions<Settings> settings) : this(settings.Value)
         {
-            var redisConnectionMultiplexer = ConnectionMultiplexer.Connect($"{settings.Value.CacheHostName}:{settings.Value.CachePortNumber}");
+        }
 
-            _database = redisConnectionMultiplexer.GetDatabase();
+        public RedisCache(Settings settings)
+        {
+            try
+            {
+                if (settings == null)
+                {
+                    throw new ArgumentNullException(nameof(settings));
+                }
+
+                var redisConnectionMultiplexer = ConnectionMultiplexer.Connect($"{settings.CacheHostName}:{settings.CachePortNumber}");
+
+                _database = redisConnectionMultiplexer.GetDatabase();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error establishing connection to Redis");
+
+                throw;
+            }
         }
 
         public async Task<QueryHashResponse> GetResponseAsync(string md5Hash)
