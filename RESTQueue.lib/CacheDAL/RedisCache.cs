@@ -22,7 +22,7 @@ namespace RESTQueue.lib.CacheDAL
         
         public string Name => "Redis";
 
-        public RedisCache(IOptions<Settings> settings) : this(settings.Value)
+        public RedisCache(IOptions<Settings> settings) : this(settings?.Value)
         {
         }
 
@@ -67,11 +67,22 @@ namespace RESTQueue.lib.CacheDAL
         {
             try
             {
+                if (response == null)
+                {
+                    throw new ArgumentNullException(nameof(response));
+                }
+
                 return await _database.StringSetAsync(response.MD5Hash, response.ToJSON());
+            }
+            catch (ArgumentNullException)
+            {
+                Log.Error("Response was null");
+
+                return false;
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"Error attempting to save {response.MD5Hash} into {Name}");
+                Log.Error(ex, $"Error attempting to save {response?.MD5Hash} into {Name}");
 
                 return false;
             }
