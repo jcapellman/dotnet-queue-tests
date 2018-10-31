@@ -21,6 +21,11 @@ namespace RESTQueue.lib.Handlers
 
         public PostHandler(string url)
         {
+            if (string.IsNullOrEmpty(url))
+            {
+                throw new ArgumentNullException(nameof(url));
+            }
+
             _baseUrl = url;
 
             _httpClient = new HttpClient();
@@ -30,6 +35,16 @@ namespace RESTQueue.lib.Handlers
         {
             try
             {
+                if (string.IsNullOrEmpty(filePath))
+                {
+                    throw new ArgumentNullException(nameof(filePath));
+                }
+
+                if (!File.Exists(filePath))
+                {
+                    throw new FileNotFoundException($"{filePath} was not found");
+                }
+
                 using (var fileStream = File.OpenRead(filePath))
                 {
                     using (var content = new MultipartFormDataContent())
@@ -49,7 +64,7 @@ namespace RESTQueue.lib.Handlers
             {
                 Log.Error(ex, $"{filePath} could not be submitted");
 
-                return null;
+                throw;
             }
         }
     }
