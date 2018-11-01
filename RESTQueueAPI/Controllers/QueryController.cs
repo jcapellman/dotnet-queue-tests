@@ -20,7 +20,7 @@ namespace RESTQueueAPI.Controllers
     public class QueryController : BaseController
     {
         public QueryController(IQueue queue, StorageManager storageManager, ILoggerFactory logger, ICache cache,
-            IOptions<Settings> settings) : base(queue, storageManager, logger, settings.Value, cache)
+            IOptions<Settings> settings) : base(queue, storageManager, logger, settings?.Value, cache)
         {
         }
 
