@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 using Microsoft.ML;
 using Microsoft.ML.Core.Data;
@@ -61,6 +62,11 @@ namespace RESTQueue.lib.datascience
 
         public bool IsMalicious(byte[] data)
         {
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
             if (_predictionFunction == null)
             {
                 LoadModel();
