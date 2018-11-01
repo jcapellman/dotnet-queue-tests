@@ -1,4 +1,6 @@
-﻿using RESTQueue.lib.datascience;
+﻿using System;
+
+using RESTQueue.lib.datascience;
 
 namespace RESTQueue.ProcessorApp
 {
@@ -10,7 +12,7 @@ namespace RESTQueue.ProcessorApp
 
         public MessageProcessor(DSManager dsmanager)
         {
-            _dsManager = dsmanager;
+            _dsManager = dsmanager ?? throw new ArgumentNullException(nameof(dsmanager));
         }
 
         public bool IsMalicious(byte[] data)
