@@ -45,5 +45,21 @@ namespace RESTQueue.UnitTests.QueueTests
 
             Assert.IsFalse(result);
         }
+
+        [TestMethod]
+        public void OnlineTest()
+        {
+            var rabbit = new RabbitQueue(ValidRabbitSettings);
+
+            Assert.IsTrue(rabbit.IsOnline());
+        }
+
+        [TestMethod]
+        public void NameTest()
+        {
+            var rabbit = new RabbitQueue(ValidRabbitSettings);
+
+            Assert.AreEqual("RabbitMQ", rabbit.Name);
+        }
     }
 }
