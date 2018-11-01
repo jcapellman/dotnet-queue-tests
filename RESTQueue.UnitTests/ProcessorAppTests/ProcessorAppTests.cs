@@ -33,9 +33,10 @@ namespace RESTQueue.UnitTests.ProcessorAppTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public async Task SubscribeContextDataTest()
         {
+            Program.Initialize();
+
             await Program.SubscribeMethod(File.ReadAllBytes(Path.GetTempFileName()), new AdvancedMessageContext());
         }
     }
