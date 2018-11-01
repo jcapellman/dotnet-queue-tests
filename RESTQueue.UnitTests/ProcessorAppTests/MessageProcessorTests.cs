@@ -28,11 +28,22 @@ namespace RESTQueue.UnitTests.ProcessorAppTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void InitializeProperNullMalicious()
         {
             var messageProcessor = new MessageProcessor(ValidDSManager);
 
             messageProcessor.IsMalicious(null);
+        }
+
+        [TestMethod]
+        public void InitializeProperNonMalicious()
+        {
+            var messageProcessor = new MessageProcessor(ValidDSManager);
+
+            var result = messageProcessor.IsMalicious(File.ReadAllBytes(Path.GetRandomFileName()));
+
+            Assert.IsFalse(result);
         }
     }
 }
