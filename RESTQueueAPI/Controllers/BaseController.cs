@@ -24,10 +24,20 @@ namespace RESTQueueAPI.Controllers
 
         public BaseController(IQueue queue, StorageManager storageManager, ILoggerFactory loggerFactory, Settings settings, ICache cache)
         {
-            Queue = queue;
-            StorageManager = storageManager;
+            Queue = queue ?? throw new ArgumentNullException(nameof(queue));
+
+            StorageManager = storageManager ?? throw new ArgumentNullException(nameof(storageManager));
+
+            if (loggerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(loggerFactory));
+            }
+
             Logger = loggerFactory.CreateLogger(GetType().Namespace);
-            Settings = settings;
+
+            Settings = settings ?? throw new ArgumentNullException(nameof(settings));
+
+            // Cache is optional
             Cache = cache;
         }
 
