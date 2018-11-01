@@ -36,6 +36,11 @@ namespace RESTQueue.ProcessorApp
 
         static void Main(string[] args)
         {
+            Initialize();
+        }
+
+        public static void Initialize()
+        {
             try
             {
                 var builder = new ConfigurationBuilder()
@@ -45,7 +50,7 @@ namespace RESTQueue.ProcessorApp
                 Configuration = builder.Build();
 
                 var services = new ServiceCollection();
-                
+
                 services.AddOptions();
 
                 services.Configure<Settings>(Configuration.GetSection("Settings"));
@@ -60,7 +65,7 @@ namespace RESTQueue.ProcessorApp
                 _serviceProvider = services.BuildServiceProvider();
 
                 _dsManager = new DSManager();
-                
+
                 _processors = new List<MessageProcessor>();
 
                 for (var x = 0; x < Environment.ProcessorCount; x++)
@@ -78,8 +83,18 @@ namespace RESTQueue.ProcessorApp
             }
         }
 
-        private static async Task SubscribeMethod(byte[] data, AdvancedMessageContext context)
+        public static async Task SubscribeMethod(byte[] data, AdvancedMessageContext context)
         {
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
             var processor = _processors.FirstOrDefault(a => !a.Running);
 
             if (processor == null)
