@@ -21,7 +21,7 @@ namespace RESTQueueAPI.Controllers
         protected readonly ILogger Logger;
         protected readonly Settings Settings;
         protected readonly ICache Cache;
-
+        
         public BaseController(IQueue queue, StorageManager storageManager, ILoggerFactory loggerFactory, Settings settings, ICache cache)
         {
             Queue = queue ?? throw new ArgumentNullException(nameof(queue));

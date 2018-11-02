@@ -24,6 +24,11 @@ namespace RESTQueueAPI.Controllers
         {
         }
 
+        public QueryController(IQueue queue, StorageManager storageManager, ILoggerFactory logger, ICache cache,
+            Settings settings) : base(queue, storageManager, logger, settings, cache)
+        {
+        }
+
         [HttpGet]
         public async Task<QueryHashResponse> Get(Guid guid)
         {
@@ -66,7 +71,7 @@ namespace RESTQueueAPI.Controllers
                 {
                     await file.CopyToAsync(memoryStream);
 
-                    if (Settings.CacheEnabled)
+                    if (Settings.CacheEnabled && Cache != null)
                     {
                         var md5Hash = MD5.Create().ComputeHash(memoryStream.ToArray()).ToString();
 
