@@ -1,5 +1,5 @@
 # dotnet-queue-tests
-Scalable RabbitMQ/ASP.NET Core platform testing.
+Random deep dive into playing around with a scalable RabbitMQ/ASP.NET Core platform coupled with ML.
 
 ## Goals
 * Scalable ML REST Service
@@ -9,3 +9,4 @@ Scalable RabbitMQ/ASP.NET Core platform testing.
 * .NET Core 2.1 Processing Application
 * MongoDB to store results
 * RabbitMQ for Task Queue
+* Redis for caching
